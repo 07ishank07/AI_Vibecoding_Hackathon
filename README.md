@@ -1,37 +1,62 @@
-# CrisisLink.cv - Your Life Passport
+CrisisLink.cv - Emergency Medical ID System
+The Core Idea (Super Simple)
+A QR code on your phone/bracelet that first responders scan to instantly see:
 
-## 🚨 The Problem
-250,000+ preventable deaths occur annually due to delayed access to medical information in emergencies.
+Your medical conditions & allergies
+Emergency contacts (auto-notified when scanned)
+What language you speak
+Basic identity info
 
-## 💡 Our Solution
-Scan QR code → Instant medical info + AI voice assistant + Auto-notify family
+One sentence: Scan QR → See medical info → Contact family → Save time in emergencies.
+Why It Matters
 
-## 🛠️ Tech Stack
-- **Backend**: Python FastAPI, PostgreSQL
-- **Frontend**: Next.js, TypeScript, Tailwind
-- **AI**: AI/ML API, CometAPI (translation, TTS)
-- **Infrastructure**: Daytona (secure sandboxed backend)
-- **Identity**: .cv domains
-- **MCP**: LeanMCP (5 AI agents)
-- **Security**: Nord Security suite (encryption)
+30% of ER deaths could be prevented with faster patient info access
+Works when you're unconscious or can't speak
+No locked phones, no language barriers
 
-## 🏃 Quick Start
-```bash
-docker-compose up
-```
+The Build (Actually Doable in 2 Days)
+Day 1: Core System (12 hours)
 
-Visit http://localhost:3000
+Profile Setup Website (4h)
 
-## 📱 How It Works
-1. Create profile at crisislink.cv
-2. Print QR code (keep in wallet)
-3. Emergency happens → Scan QR
-4. AI speaks medical info in responder's language
-5. Family auto-notified with location
+Simple form: name, blood type, allergies, conditions, emergency contacts
+Hosted on yourname.cv domain
+Clean, mobile-friendly UI
 
-## 🏆 Hackathon Integration
-- ✅ Daytona: Entire backend runs in secure workspace
-- ✅ LeanMCP: 5 production MCP agents
-- ✅ .cv domains: Emergency identity layer
-- ✅ AI/ML API: Translation + TTS
-- ✅ Nord Security: HIPAA-compliant encryption
+
+QR Code Generator (2h)
+
+Creates QR linking to your .cv profile
+Printable card design
+
+
+Emergency View Page (4h)
+
+Big text, high contrast (for stressed responders)
+"Call Family" button → sends SMS/email with your location
+Language selector at top
+
+
+Basic Backend (2h)
+
+Store encrypted profiles
+Send emergency alerts
+
+
+
+Day 2: AI + Polish (12 hours)
+
+Voice Readout Feature (4h)
+
+AI reads your medical info aloud in selected language
+Uses ElevenLabs or AI/ML API
+Hands-free for busy first responders
+
+
+Smart Translation (3h)
+
+Auto-translate medical terms
+LeanMCP for translation service
+Works in 10+ languages
+
+

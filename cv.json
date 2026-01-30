@@ -1,0 +1,13 @@
+{
+    "name": "CrisisLink",
+    "domain": "crisislink.cv",
+    "identity": {
+        "provider": "ola",
+        "api_key": "qFSmQ6In1nTgWqEk55LbNi8U0oNivQUjKFQeERN1e4c50f3e"
+    },
+    "metadata": {
+        "version": "1.0.0",
+        "description": "Emergency Passport Identity Layer",
+        "project": "AI Vibecoding Hackathon"
+    }
+}
