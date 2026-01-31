@@ -4,10 +4,21 @@ from twilio.rest import Client
 from app.config import settings
 import httpx
 
-twilio_client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+# Initialize Twilio client only if credentials are provided
+twilio_client = None
+if settings.TWILIO_ACCOUNT_SID and settings.TWILIO_AUTH_TOKEN:
+    try:
+        twilio_client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    except Exception as e:
+        print(f"Failed to initialize Twilio client: {e}")
+        twilio_client = None
 
 async def send_emergency_sms(phone: str, message: str):
     """Send SMS to emergency contact"""
+    if not twilio_client:
+        print(f"SMS would be sent to {phone}: {message}")
+        return "mock_sid_demo_mode"
+    
     try:
         message = twilio_client.messages.create(
             body=message,

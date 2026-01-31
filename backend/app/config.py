@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     TWILIO_AUTH_TOKEN: str = ""
     TWILIO_PHONE_NUMBER: str = ""
     
+    OLA_API_KEY: str = ""
+    
     # LeanMCP
     LEANMCP_API_KEY: str = ""
     

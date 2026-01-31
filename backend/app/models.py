@@ -59,7 +59,7 @@ class EmergencyContact(Base):
     user_id = Column(String, ForeignKey("users.id"))
     
     name = Column(String, nullable=False)
-    relationship = Column(String)  # "Spouse", "Parent", etc.
+    relation = Column(String)  # "Spouse", "Parent", etc.
     phone = Column(String, nullable=False)
     email = Column(String)
     priority = Column(String)  # 1, 2, 3

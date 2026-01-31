@@ -37,7 +37,7 @@ class MedicalProfileResponse(BaseModel):
 
 class EmergencyContactCreate(BaseModel):
     name: str
-    relationship: str
+    relation: str
     phone: str
     email: Optional[str] = None
     priority: int

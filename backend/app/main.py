@@ -2,9 +2,12 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.config import settings
 from app.routes import profiles, emergency
 from app.database import engine
 from app.models import Base
+
+# OLA_API_KEY is now accessible via settings.OLA_API_KEY
 
 # Create tables
 Base.metadata.create_all(bind=engine)

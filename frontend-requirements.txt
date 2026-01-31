@@ -1,0 +1,60 @@
+CrisisLink.cv Frontend Design & Requirements Document
+=======================================================
+
+PROJECT OVERVIEW:
+- Emergency medical information system with QR code access
+- Target users: General public creating profiles + Emergency responders accessing them
+- Core flow: Create profile → Generate QR → Emergency access → AI voice + notifications
+
+DESIGN ANSWERS:
+===============
+
+1. VISUAL STYLE & BRANDING:
+   ✓ Modern tech lighter design (clean, professional, accessible)
+   ✓ Optimized for medical professionals in emergency situations
+   ✓ Color scheme: Light/clean with red emergency accents
+   ✓ Mobile AND desktop equally important (mobile for users, desktop for doctors)
+
+2. USER EXPERIENCE PRIORITIES:
+   ✓ PRIMARY FOCUS: Emergency access experience
+   ✓ Mobile-first for user profiles, desktop-optimized for medical access
+   ✓ Accessibility critical for emergency situations
+
+3. EMERGENCY ACCESS EXPERIENCE:
+   ✓ Two-tier access system:
+     - Public/logged-out: Basic profile (user-controlled visibility)
+     - Medical professionals/logged-in: Full emergency access with confirmation
+   ✓ Emergency contacts ALWAYS visible for emergency access
+   ✓ Emergency contacts optional for basic profile view
+
+4. PROFILE CREATION FLOW:
+   ✓ Multi-step wizard approach
+   ✓ Photos heavily recommended but not mandatory
+   ✓ User controls what's visible in public vs emergency access
+
+5. IMMEDIATE DEVELOPMENT PRIORITIES:
+   ✓ Phase 1: Profile creation wizard + Emergency access page (NO QR gen/voice yet)
+   ✓ Focus on core functionality first, features later
+
+PAGE STRUCTURE PLAN:
+===================
+
+1. Landing Page (✓ exists - basic)
+2. Profile Creation Wizard:
+   - Step 1: Basic Info (name, DOB, blood type)
+   - Step 2: Medical Details (allergies, medications, conditions)
+   - Step 3: Emergency Contacts
+   - Step 4: Privacy Settings (what's public vs emergency-only)
+3. Emergency Access Page:
+   - Public view: Limited info based on user settings
+   - Medical professional view: Full emergency details
+4. Simple login/auth for medical professionals
+
+DESIGN PRINCIPLES:
+==================
+- Clean, minimal interface
+- High contrast for readability
+- Large touch targets for mobile
+- Fast loading (emergency situations)
+- Clear visual hierarchy
+- Professional medical aesthetic

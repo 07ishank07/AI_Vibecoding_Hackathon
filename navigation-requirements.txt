@@ -1,0 +1,64 @@
+CrisisLink.cv Navigation Requirements
+====================================
+
+CURRENT NAVIGATION STATUS:
+- No consistent navigation between pages
+- Users must use browser back/forward or type URLs
+- Links exist but scattered across pages
+
+REQUIREMENTS ANALYSIS:
+=====================
+
+1. USER CONTEXT PRIORITY:
+✅ Medical professionals emphasized but public pages must be nice/accessible
+✅ Both user types important, medical professionals get additional features
+
+2. EMERGENCY vs NON-EMERGENCY CONTEXT:
+✅ Emergency pages: Distraction-free, minimal navigation
+✅ Profile creation/management: Full contextual navigation
+✅ Different navigation for different contexts
+
+3. DEVICE USAGE PATTERNS:
+✅ Profile creation + Emergency access: Mobile-considered
+✅ In-depth profile info: Desktop-oriented
+✅ Navigation should adapt to page context
+
+4. NAVIGATION COMPLEXITY:
+✅ Standard: Home, About, Login, Create Profile, Dashboard, Profile Preview, Emergency Demo
+
+5. MEDICAL PROFESSIONAL WORKFLOW:
+✅ Additional items: Medical Dashboard, Emergency Tools
+✅ Enhanced features for medical professionals
+
+RECOMMENDED APPROACH:
+====================
+
+HYBRID CONTEXTUAL NAVIGATION:
+
+1. PUBLIC PAGES (Landing, About, Create Profile):
+   - Clean horizontal navbar
+   - Mobile hamburger menu
+   - Focus on accessibility and aesthetics
+
+2. USER DASHBOARD PAGES (Dashboard, Profile Preview):
+   - Enhanced navbar with user context
+   - Quick action buttons
+   - Profile management focus
+
+3. EMERGENCY PAGES (Emergency Access):
+   - MINIMAL navigation (just home/back)
+   - Distraction-free medical info focus
+   - Large, clear medical data display
+
+4. MEDICAL PROFESSIONAL PAGES:
+   - Additional nav items (Medical Dashboard, Emergency Tools)
+   - Professional styling (clinical, efficient)
+   - Quick access to emergency functions
+
+IMPLEMENTATION PLAN:
+===================
+1. Create responsive navbar component
+2. Implement contextual navigation logic
+3. Add mobile hamburger menu
+4. Create minimal emergency navigation
+5. Add medical professional navigation items
