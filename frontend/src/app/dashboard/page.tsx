@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, QrCode, Eye, Edit, Download, Settings, LogOut, AlertCircle, Loader2 } from 'lucide-react';
-import { getPatientDashboard, getUserInfo, removeAuthToken } from '@/lib/api';
+import { getPatientDashboard, getUserInfo, removeAuthToken, getProfile } from '@/lib/api';
+import ProfilePreview from '@/lib/components/ProfilePreview';
 
 // =============================================================================
 // TYPE DEFINITIONS
@@ -36,6 +37,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [fullProfile, setFullProfile] = useState<any>(null);
 
   /**
    * Fetch dashboard data on component mount
@@ -59,6 +61,12 @@ export default function Dashboard() {
       try {
         const data = await getPatientDashboard(userId);
         setDashboardData(data);
+        
+        // Fetch full profile for preview if profile exists
+        if (data.profile?.id) {
+          const profileData = await getProfile(userId);
+          setFullProfile(profileData);
+        }
       } catch (err: any) {
         setError('Failed to load dashboard data');
         console.error('Dashboard error:', err);
@@ -258,6 +266,22 @@ export default function Dashboard() {
             <p className="text-sm text-gray-600">Edit profile and privacy</p>
           </button>
         </div>
+
+        {/* Debug Info */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <h3 className="font-semibold text-yellow-800 mb-2">Debug - Full Profile Data</h3>
+          <pre className="text-xs text-yellow-700 max-h-40 overflow-y-auto">
+            {JSON.stringify(fullProfile, null, 2)}
+          </pre>
+        </div>
+
+        {/* Profile Preview */}
+        {hasProfile && fullProfile && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Medical Information Preview</h2>
+            <ProfilePreview profile={fullProfile} />
+          </div>
+        )}
 
         {/* Profile Summary */}
         {hasProfile && (

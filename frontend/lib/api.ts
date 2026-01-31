@@ -99,6 +99,24 @@ export const getUserInfo = (): { userId: string | null; userType: string | null 
 // TYPE DEFINITIONS
 // =============================================================================
 
+export interface ReferenceDataResponse {
+    [category: string]: Array<{
+        id: number;
+        category: string;
+        subcategory?: string;
+        name: string;
+    }>;
+}
+
+export interface SearchReferenceResponse {
+    [group: string]: Array<{
+        id: number;
+        category: string;
+        subcategory?: string;
+        name: string;
+    }>;
+}
+
 export interface LoginCredentials {
     email: string;
     password: string;
@@ -150,9 +168,9 @@ export interface MedicalProfileData {
     full_name: string;
     date_of_birth?: string;
     blood_type?: string;
-    allergies?: Array<{ type: string; value: string }>;
-    medications?: Array<{ type: string; value: string }>;
-    medical_conditions?: Array<{ type: string; value: string }>;
+    allergies?: string[];
+    medications?: string[];
+    medical_conditions?: string[];
     dnr_status?: boolean;
     organ_donor?: boolean;
     special_instructions?: string;
@@ -248,6 +266,22 @@ export const getDoctorDashboard = async (userId: string): Promise<any> => {
 };
 
 // =============================================================================
+// REFERENCE DATA API
+// =============================================================================
+
+export const getReferenceData = async (): Promise<ReferenceDataResponse> => {
+    const response = await apiClient.get<ReferenceDataResponse>('/api/reference/');
+    return response.data;
+};
+
+export const searchReferences = async (query: string, category?: string): Promise<SearchReferenceResponse> => {
+    const response = await apiClient.get<SearchReferenceResponse>('/api/reference/search', {
+        params: { q: query, category }
+    });
+    return response.data;
+};
+
+// =============================================================================
 // PROFILE API
 // =============================================================================
 
@@ -260,9 +294,9 @@ export const createProfile = async (userId: string, profileData: MedicalProfileD
         full_name: profileData.full_name,
         date_of_birth: profileData.date_of_birth,
         blood_type: profileData.blood_type,
-        allergies: profileData.allergies?.map(a => a.value) || [],
-        medications: profileData.medications?.map(m => m.value) || [],
-        medical_conditions: profileData.medical_conditions?.map(c => c.value) || [],
+        allergies: profileData.allergies || [],
+        medications: profileData.medications || [],
+        medical_conditions: profileData.medical_conditions || [],
         dnr_status: profileData.dnr_status || false,
         organ_donor: profileData.organ_donor || false,
         special_instructions: profileData.special_instructions,
@@ -282,9 +316,9 @@ export const updateProfile = async (userId: string, profileData: MedicalProfileD
         full_name: profileData.full_name,
         date_of_birth: profileData.date_of_birth,
         blood_type: profileData.blood_type,
-        allergies: profileData.allergies?.map(a => a.value) || [],
-        medications: profileData.medications?.map(m => m.value) || [],
-        medical_conditions: profileData.medical_conditions?.map(c => c.value) || [],
+        allergies: profileData.allergies || [],
+        medications: profileData.medications || [],
+        medical_conditions: profileData.medical_conditions || [],
         dnr_status: profileData.dnr_status || false,
         organ_donor: profileData.organ_donor || false,
         special_instructions: profileData.special_instructions,

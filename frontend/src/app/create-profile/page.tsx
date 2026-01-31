@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User } from 'lucide-react';
 import { createProfile, getUserInfo, getPatientDashboard } from '@/lib/api';
 import ProfileForm, { ProfileFormData } from '@/lib/components/ProfileForm';
 
@@ -94,11 +94,14 @@ export default function CreateProfile() {
   // ===========================================================================
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 py-8">
+      <div className="max-w-3xl mx-auto px-4">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Create Your Profile</h1>
-          <p className="text-gray-600">Please provide your medical details for emergency access</p>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+            <User className="w-8 h-8 text-red-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Your Profile</h1>
+          <p className="text-lg text-gray-600">Your emergency medical information, always accessible</p>
         </div>
 
         <ProfileForm onSubmit={handleSubmit} />

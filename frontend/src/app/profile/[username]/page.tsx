@@ -2,12 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { User, Heart, Eye, EyeOff, Edit, Loader2 } from 'lucide-react';
-import { getUserInfo, getPatientDashboard } from '@/lib/api'; // Using getPatientDashboard as proxy to get one's own profile
-// For public visiting other profiles, we would need a public endpoint e.g. /api/profiles/public/{username}
-// But current requirement seems to focus on "preview" which implies seeing your OWN profile as others would.
-// So we use existing authenticated endpoints.
+import { getUserInfo, getProfile } from '@/lib/api';
+import ProfilePreview from '@/lib/components/ProfilePreview';
 
-export default function ProfilePreview({ params }: { params: { username: string } }) {
+export default function ProfilePage({ params }: { params: { username: string } }) {
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isOwner, setIsOwner] = useState(false);
@@ -16,17 +14,10 @@ export default function ProfilePreview({ params }: { params: { username: string 
     const fetchProfile = async () => {
       try {
         const { userId } = getUserInfo();
-        // Ideally we check if params.username matches current user
-        // But for now, let's just fetch the current user's profile to show "Preview" functionality
-        // If we want to support viewing OTHERS, we need backend support for public profiles.
-        // The user request "The profile preview is hardcoded. Fix it." likely refers to the "Preview" button on dashboard.
-
         if (userId) {
-          const data = await getPatientDashboard(userId);
-          if (data && data.profile) {
-            setProfile(data.profile);
-            setIsOwner(true); // Assuming we are viewing our own
-          }
+          const profileData = await getProfile(userId);
+          setProfile(profileData);
+          setIsOwner(true);
         }
       } catch (err) {
         console.error("Failed to fetch profile", err);
@@ -35,7 +26,7 @@ export default function ProfilePreview({ params }: { params: { username: string 
       }
     };
     fetchProfile();
-  }, [params.username]);
+  }, []);
 
   const calculateAge = (birthDate: string) => {
     if (!birthDate) return 'N/A';
@@ -128,172 +119,18 @@ export default function ProfilePreview({ params }: { params: { username: string 
           </div>
         </div>
 
-        {/* Profile Content */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Personal Information */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center mb-4">
-              <User className="h-6 w-6 text-gray-600 mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">Personal Information</h2>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Full Name</label>
-                  {isOwner || publicVisible.name ? (
-                    <p className="text-lg font-semibold text-gray-900">{profile.full_name}</p>
-                  ) : (
-                    <p className="text-gray-400 italic">Hidden from public</p>
-                  )}
-                </div>
-                {isOwner && (
-                  <div className="text-sm">
-                    {publicVisible.name ? (
-                      <Eye className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Age</label>
-                  <p className="text-lg text-gray-900">{calculateAge(profile.date_of_birth)} years old</p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Blood Type</label>
-                  {isOwner || publicVisible.bloodType ? (
-                    <p className="text-2xl font-bold text-red-600">{profile.blood_type}</p>
-                  ) : (
-                    <p className="text-gray-400 italic">Hidden from public</p>
-                  )}
-                </div>
-                {isOwner && (
-                  <div className="text-sm">
-                    {publicVisible.bloodType ? (
-                      <Eye className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Medical Information */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center mb-4">
-              <Heart className="h-6 w-6 text-red-600 mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">Medical Information</h2>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-gray-500 mb-1">Allergies</label>
-                  {(isOwner || publicVisible.allergies) && profile.allergies && profile.allergies.length > 0 ? (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                      <p className="text-red-800 font-semibold">⚠️ {formatList(profile.allergies)}</p>
-                    </div>
-                  ) : (
-                    <p className="text-gray-400 italic">No allergies listed or hidden</p>
-                  )}
-                </div>
-                {isOwner && (
-                  <div className="ml-2">
-                    {publicVisible.allergies ? (
-                      <Eye className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-gray-500 mb-1">Current Medications</label>
-                  {(isOwner || publicVisible.medications) && profile.medications && profile.medications.length > 0 ? (
-                    <p className="text-gray-900">{formatList(profile.medications)}</p>
-                  ) : (
-                    <p className="text-gray-400 italic">No medications listed or hidden</p>
-                  )}
-                </div>
-                {isOwner && (
-                  <div className="ml-2">
-                    {publicVisible.medications ? (
-                      <Eye className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-gray-500 mb-1">Medical Conditions</label>
-                  {(isOwner || publicVisible.conditions) && profile.medical_conditions && profile.medical_conditions.length > 0 ? (
-                    <p className="text-gray-900">{formatList(profile.medical_conditions)}</p>
-                  ) : (
-                    <p className="text-gray-400 italic">No conditions listed or hidden</p>
-                  )}
-                </div>
-                {isOwner && (
-                  <div className="ml-2">
-                    {publicVisible.conditions ? (
-                      <Eye className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+        {/* Debug Info */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <h3 className="font-semibold text-yellow-800 mb-2">Debug Info</h3>
+          <pre className="text-xs text-yellow-700">
+            {JSON.stringify(profile, null, 2)}
+          </pre>
         </div>
 
-        {/* Emergency Contacts */}
-        <div className="bg-white rounded-lg shadow-md p-6 mt-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Emergency Contacts</h2>
-            {isOwner && (
-              <div>
-                {publicVisible.contacts ? (
-                  <Eye className="h-4 w-4 text-green-600" />
-                ) : (
-                  <EyeOff className="h-4 w-4 text-gray-400" />
-                )}
-              </div>
-            )}
-          </div>
-
-          {(isOwner || publicVisible.contacts) ? (
-            <div className="grid md:grid-cols-2 gap-4">
-              {profile.contacts && profile.contacts.map((contact: any, index: number) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-semibold text-gray-900">{contact.name}</h3>
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                      Priority {contact.priority}
-                    </span>
-                  </div>
-                  <p className="text-gray-600 text-sm mb-2">{contact.relation}</p>
-                  <p className="text-blue-600 font-medium">{contact.phone}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-400 italic">Emergency contacts are hidden from public view</p>
-          )}
-        </div>
+        {/* Profile Preview Component */}
+        {profile && (
+          <ProfilePreview profile={profile} />
+        )}
 
         {/* Privacy Legend */}
         {isOwner && (
