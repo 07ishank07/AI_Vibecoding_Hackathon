@@ -1,20 +1,32 @@
-# FastAPI entry point
+# FastAPI entry point for CrisisLink.cv
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.config import settings
-from app.routes import profiles, emergency
+from app.config import settings
+from app.routes import profiles, emergency, auth, dashboard, reference
 from app.database import engine
 from app.models import Base
 
-# OLA_API_KEY is now accessible via settings.OLA_API_KEY
+# =============================================================================
+# DATABASE INITIALIZATION
+# =============================================================================
 
-# Create tables
+# Create all database tables
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="CrisisLink.cv API", version="1.0.0")
+# =============================================================================
+# APP CONFIGURATION
+# =============================================================================
 
-# CORS
+app = FastAPI(
+    title="CrisisLink.cv API",
+    description="Emergency medical information system API",
+    version="1.0.0"
+)
+
+# CORS configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # In production, specify exact origins
@@ -23,14 +35,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
+# =============================================================================
+# ROUTER REGISTRATION
+# =============================================================================
+
+# Authentication routes
+app.include_router(auth.router)
+
+# Profile management routes
 app.include_router(profiles.router)
+
+# Emergency access routes
 app.include_router(emergency.router)
+
+# Dashboard data routes
+app.include_router(dashboard.router)
+
+# Reference data routes
+app.include_router(reference.router)
+
+# =============================================================================
+# ROOT ENDPOINTS
+# =============================================================================
 
 @app.get("/")
 async def root():
-    return {"message": "CrisisLink.cv API", "status": "operational"}
+    """API root endpoint - returns status"""
+    return {
+        "message": "CrisisLink.cv API",
+        "status": "operational",
+        "version": "1.0.0"
+    }
 
 @app.get("/health")
 async def health_check():
+    """Health check endpoint for monitoring"""
     return {"status": "healthy"}
