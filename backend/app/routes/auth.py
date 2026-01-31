@@ -230,6 +230,18 @@ async def get_current_user(user_id: str, db: Session = Depends(get_db)):
 # HOSPITALS LIST ENDPOINT
 # =============================================================================
 
+@router.get("/users")
+async def list_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+    return [{"user_id": u.id, "username": u.username, "email": u.email} for u in users]
+
+@router.get("/user/{username}")
+async def get_user_by_username(username: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        raise HTTPException(404, "User not found")
+    return {"user_id": user.id, "username": user.username, "email": user.email}
+
 @router.get("/hospitals")
 async def get_hospitals():
     """

@@ -1,17 +1,35 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, User, Heart, Phone, Shield, X, Plus, AlertCircle, Save } from 'lucide-react';
-import { MedicalProfileData } from '@/lib/api';
+import { ChevronLeft, ChevronRight, User, Heart, Phone, Shield, Save, Loader2, X, Plus } from 'lucide-react';
+import SimpleDropdown from './SimpleDropdown';
+import ProgressLine from './ProgressLine';
 
-// =============================================================================
-// TYPE DEFINITIONS
-// =============================================================================
-
-export interface MedicalItem {
-    type: 'predefined' | 'custom';
-    value: string;
-}
+// Predefined medical data from database
+const MEDICAL_DATA = {
+    allergies: {
+        category: 'Allergies',
+        items: [
+            'Penicillin', 'Amoxicillin', 'Aspirin', 'Ibuprofen', 'Sulfa Drugs',
+            'Peanuts', 'Tree Nuts', 'Shellfish', 'Fish', 'Milk', 'Eggs',
+            'Pollen', 'Dust Mites', 'Mold', 'Pet Dander', 'Bee Stings'
+        ]
+    },
+    conditions: {
+        category: 'Conditions',
+        items: [
+            'Diabetes', 'Hypertension', 'Asthma', 'COPD', 'Heart Disease',
+            'Arthritis', 'Depression', 'Anxiety', 'Epilepsy', 'Cancer'
+        ]
+    },
+    medications: {
+        category: 'Medications',
+        items: [
+            'Aspirin', 'Ibuprofen', 'Acetaminophen', 'Metformin', 'Lisinopril',
+            'Amlodipine', 'Metoprolol', 'Omeprazole', 'Simvastatin', 'Levothyroxine'
+        ]
+    }
+};
 
 export interface EmergencyContact {
     name: string;
@@ -33,9 +51,9 @@ export interface ProfileFormData {
     fullName: string;
     dateOfBirth: string;
     bloodType: string;
-    allergies: MedicalItem[];
-    medications: MedicalItem[];
-    medicalConditions: MedicalItem[];
+    allergies: string[];
+    medications: string[];
+    medicalConditions: string[];
     contacts: EmergencyContact[];
     publicVisible: PrivacySettings;
 }
@@ -51,32 +69,14 @@ interface ProfileFormProps {
 }
 
 // =============================================================================
-// MEDICAL DATA CONSTANTS (Ideally fetched from backend reference API)
-// =============================================================================
-
-const COMMON_ALLERGENS = [
-    { category: 'Medications', items: ['Penicillin', 'Amoxicillin', 'Aspirin', 'Ibuprofen', 'Naproxen', 'Sulfa Drugs', 'Codeine', 'Morphine', 'Latex', 'Contrast Dye'] },
-    { category: 'Foods', items: ['Peanuts', 'Tree Nuts', 'Shellfish', 'Fish', 'Milk', 'Eggs', 'Soy', 'Wheat', 'Sesame', 'Corn'] },
-    { category: 'Environmental', items: ['Pollen', 'Dust Mites', 'Mold', 'Pet Dander', 'Bee Stings', 'Wasp Stings', 'Cockroaches', 'Grass'] },
-];
-
-const COMMON_MEDICATIONS = ['Aspirin', 'Ibuprofen', 'Acetaminophen', 'Metformin', 'Lisinopril', 'Amlodipine', 'Metoprolol', 'Omeprazole', 'Simvastatin', 'Levothyroxine', 'Albuterol', 'Gabapentin', 'Hydrochlorothiazide', 'Losartan', 'Atorvastatin'];
-
-const COMMON_CONDITIONS = ['Diabetes', 'Hypertension', 'Asthma', 'COPD', 'Heart Disease', 'Arthritis', 'Depression', 'Anxiety', 'Epilepsy', 'Cancer', 'Kidney Disease', 'Liver Disease', 'Stroke', 'Heart Attack History'];
-
-// =============================================================================
 // COMPONENT
 // =============================================================================
 
 export default function ProfileForm({ initialData, onSubmit, isEditing = false }: ProfileFormProps) {
     const [currentStep, setCurrentStep] = useState(1);
     const [errors, setErrors] = useState<ValidationErrors>({});
-    const [showAllergyDropdown, setShowAllergyDropdown] = useState(false);
-    const [showMedicationDropdown, setShowMedicationDropdown] = useState(false);
-    const [showConditionDropdown, setShowConditionDropdown] = useState(false);
-    const [customAllergyInput, setCustomAllergyInput] = useState('');
-    const [customMedicationInput, setCustomMedicationInput] = useState('');
-    const [customConditionInput, setCustomConditionInput] = useState('');
+
+
 
     const [formData, setFormData] = useState<ProfileFormData>(initialData || {
         fullName: '',
@@ -100,6 +100,8 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
     const stepIcons = [User, Heart, Phone, Shield];
     const stepTitles = ['Basic Info', 'Medical Details', 'Emergency Contacts', 'Privacy Settings'];
 
+
+
     const updateFormData = (field: keyof ProfileFormData, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
         if (errors[field]) {
@@ -109,19 +111,6 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                 return newErrors;
             });
         }
-    };
-
-    // Helper functions for medical items
-    const addItem = (field: 'allergies' | 'medications' | 'medicalConditions', value: string, type: 'predefined' | 'custom', setInput: (v: string) => void) => {
-        if (!value.trim()) return;
-        const exists = formData[field].some(item => item.value.toLowerCase() === value.toLowerCase());
-        if (exists) return;
-        setFormData(prev => ({ ...prev, [field]: [...prev[field], { type, value }] }));
-        setInput('');
-    };
-
-    const removeItem = (field: 'allergies' | 'medications' | 'medicalConditions', index: number) => {
-        setFormData(prev => ({ ...prev, [field]: prev[field].filter((_, i) => i !== index) }));
     };
 
     // Helper functions for contacts
@@ -185,49 +174,35 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
         if (currentStep > 1) setCurrentStep(currentStep - 1);
     };
 
+
+
     return (
-        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
-            {/* Progress Bar */}
-            <div className="mb-8 relative">
-                <div className="h-2 bg-gray-200 rounded-full">
-                    <div className="h-2 bg-red-600 rounded-full transition-all duration-300 ease-in-out" style={{ width: `${(currentStep / totalSteps) * 100}%` }}></div>
-                </div>
-                <div className="flex justify-between mt-4">
-                    {stepIcons.map((Icon, index) => {
-                        const step = index + 1;
-                        const isActive = step === currentStep;
-                        const isCompleted = step < currentStep;
-                        return (
-                            <div key={index} className="flex flex-col items-center">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 ${isActive ? 'bg-red-600 text-white shadow-lg scale-110' : isCompleted ? 'bg-red-200 text-red-700' : 'bg-gray-200 text-gray-400'}`}>
-                                    <Icon size={20} />
-                                </div>
-                                <span className={`text-xs mt-2 font-medium ${isActive ? 'text-red-600' : 'text-gray-500'}`}>{stepTitles[index]}</span>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10 border border-gray-100">
+            {/* Progress Line */}
+            <ProgressLine currentStep={currentStep} totalSteps={totalSteps} />
 
             {/* Step Content */}
-            <div className="min-h-[400px]">
+            <div className="min-h-[500px]">
                 {currentStep === 1 && (
                     <div className="space-y-6 animate-fadeIn">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Basic Information</h2>
+                        <div className="text-center mb-8">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-2">Basic Information</h2>
+                            <p className="text-gray-600">Let's start with your essential details</p>
+                        </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Full Name <span className="text-red-600">*</span></label>
-                            <input type="text" value={formData.fullName} onChange={(e) => updateFormData('fullName', e.target.value)} className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none ${errors.fullName ? 'border-red-500' : 'border-gray-300'}`} placeholder="Enter full legal name" />
+                            <input type="text" value={formData.fullName} onChange={(e) => updateFormData('fullName', e.target.value)} className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 ${errors.fullName ? 'border-red-500' : 'border-gray-200'}`} placeholder="Enter full legal name" />
                             {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth <span className="text-red-600">*</span></label>
-                                <input type="date" value={formData.dateOfBirth} onChange={(e) => updateFormData('dateOfBirth', e.target.value)} className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none ${errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'}`} />
+                                <input type="date" value={formData.dateOfBirth} onChange={(e) => updateFormData('dateOfBirth', e.target.value)} className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 ${errors.dateOfBirth ? 'border-red-500' : 'border-gray-200'}`} />
                                 {errors.dateOfBirth && <p className="text-red-500 text-xs mt-1">{errors.dateOfBirth}</p>}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Blood Type <span className="text-red-600">*</span></label>
-                                <select value={formData.bloodType} onChange={(e) => updateFormData('bloodType', e.target.value)} className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none ${errors.bloodType ? 'border-red-500' : 'border-gray-300'}`}>
+                                <select value={formData.bloodType} onChange={(e) => updateFormData('bloodType', e.target.value)} className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 ${errors.bloodType ? 'border-red-500' : 'border-gray-200'}`}>
                                     <option value="">Select Blood Type</option>
                                     {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Unknown'].map(bt => <option key={bt} value={bt}>{bt}</option>)}
                                 </select>
@@ -239,77 +214,34 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
 
                 {currentStep === 2 && (
                     <div className="space-y-8 animate-fadeIn">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Medical Details</h2>
-                        {/* Allergies */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Allergies</label>
-                            <div className="flex flex-wrap gap-2 mb-3">
-                                {formData.allergies.map((a, i) => (
-                                    <span key={i} className="bg-red-50 text-red-700 px-3 py-1 rounded-full text-sm flex items-center border border-red-100">{a.value} <button onClick={() => removeItem('allergies', i)} className="ml-2"><X size={14} /></button></span>
-                                ))}
-                            </div>
-                            <div className="relative flex">
-                                <input type="text" value={customAllergyInput} onChange={e => setCustomAllergyInput(e.target.value)} onFocus={() => setShowAllergyDropdown(true)} className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-red-500 focus:outline-none" placeholder="Add allergy..." />
-                                <button onClick={() => addItem('allergies', customAllergyInput, 'custom', setCustomAllergyInput)} className="bg-red-600 text-white px-4 rounded-r-lg"><Plus size={20} /></button>
-                            </div>
-                            {showAllergyDropdown && customAllergyInput === '' && (
-                                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                                    <div className="flex justify-between p-2 border-b bg-gray-50"><span className="text-xs font-bold text-gray-500">Common Allergens</span><button onClick={() => setShowAllergyDropdown(false)}><X size={14} className="text-gray-400" /></button></div>
-                                    {COMMON_ALLERGENS.map(cat => (
-                                        <div key={cat.category}>
-                                            <div className="px-3 py-1 bg-gray-50 text-xs font-bold text-gray-500">{cat.category}</div>
-                                            {cat.items.map(item => (
-                                                <button key={item} onClick={() => { addItem('allergies', item, 'predefined', setCustomAllergyInput); setShowAllergyDropdown(false); }} className="w-full text-left px-4 py-2 hover:bg-red-50 text-sm">{item}</button>
-                                            ))}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                        <div className="text-center mb-8">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-2">Medical Details</h2>
+                            <p className="text-gray-600">Help responders understand your medical needs</p>
                         </div>
 
-                        {/* Conditions */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Medical Conditions</label>
-                            <div className="flex flex-wrap gap-2 mb-3">
-                                {formData.medicalConditions.map((c, i) => (
-                                    <span key={i} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center border border-blue-100">{c.value} <button onClick={() => removeItem('medicalConditions', i)} className="ml-2"><X size={14} /></button></span>
-                                ))}
-                            </div>
-                            <div className="relative flex">
-                                <input type="text" value={customConditionInput} onChange={e => setCustomConditionInput(e.target.value)} onFocus={() => setShowConditionDropdown(true)} className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:outline-none" placeholder="Add condition..." />
-                                <button onClick={() => addItem('medicalConditions', customConditionInput, 'custom', setCustomConditionInput)} className="bg-blue-600 text-white px-4 rounded-r-lg"><Plus size={20} /></button>
-                            </div>
-                            {showConditionDropdown && customConditionInput === '' && (
-                                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                                    <div className="flex justify-between p-2 border-b bg-gray-50"><span className="text-xs font-bold text-gray-500">Common Conditions</span><button onClick={() => setShowConditionDropdown(false)}><X size={14} className="text-gray-400" /></button></div>
-                                    {COMMON_CONDITIONS.map(item => (
-                                        <button key={item} onClick={() => { addItem('medicalConditions', item, 'predefined', setCustomConditionInput); setShowConditionDropdown(false); }} className="w-full text-left px-4 py-2 hover:bg-blue-50 text-sm">{item}</button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        <SimpleDropdown
+                            label="🚨 Allergies"
+                            value={formData.allergies}
+                            onChange={(val) => updateFormData('allergies', val)}
+                            colorTheme="red"
+                            options={MEDICAL_DATA.allergies}
+                        />
 
-                        {/* Medications */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Current Medications</label>
-                            <div className="flex flex-wrap gap-2 mb-3">
-                                {formData.medications.map((m, i) => (
-                                    <span key={i} className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm flex items-center border border-green-100">{m.value} <button onClick={() => removeItem('medications', i)} className="ml-2"><X size={14} /></button></span>
-                                ))}
-                            </div>
-                            <div className="relative flex">
-                                <input type="text" value={customMedicationInput} onChange={e => setCustomMedicationInput(e.target.value)} onFocus={() => setShowMedicationDropdown(true)} className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-green-500 focus:outline-none" placeholder="Add medication..." />
-                                <button onClick={() => addItem('medications', customMedicationInput, 'custom', setCustomMedicationInput)} className="bg-green-600 text-white px-4 rounded-r-lg"><Plus size={20} /></button>
-                            </div>
-                            {showMedicationDropdown && customMedicationInput === '' && (
-                                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                                    <div className="flex justify-between p-2 border-b bg-gray-50"><span className="text-xs font-bold text-gray-500">Common Medications</span><button onClick={() => setShowMedicationDropdown(false)}><X size={14} className="text-gray-400" /></button></div>
-                                    {COMMON_MEDICATIONS.map(item => (
-                                        <button key={item} onClick={() => { addItem('medications', item, 'predefined', setCustomMedicationInput); setShowMedicationDropdown(false); }} className="w-full text-left px-4 py-2 hover:bg-green-50 text-sm">{item}</button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        <SimpleDropdown
+                            label="🏥 Medical Conditions"
+                            value={formData.medicalConditions}
+                            onChange={(val) => updateFormData('medicalConditions', val)}
+                            colorTheme="blue"
+                            options={MEDICAL_DATA.conditions}
+                        />
+
+                        <SimpleDropdown
+                            label="💊 Current Medications"
+                            value={formData.medications}
+                            onChange={(val) => updateFormData('medications', val)}
+                            colorTheme="green"
+                            options={MEDICAL_DATA.medications}
+                        />
                     </div>
                 )}
 
@@ -327,7 +259,7 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                 {formData.contacts.length > 1 && <button onClick={() => removeContact(idx)} className="mt-3 text-red-600 text-xs flex items-center"><X size={12} className="mr-1" /> Remove</button>}
                             </div>
                         ))}
-                        {formData.contacts.length < 3 && <button onClick={addContact} className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 flex justify-center items-center"><Plus size={16} className="mr-2" /> Add Contact</button>}
+                        {formData.contacts.length < 3 && <button onClick={addContact} className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 flex justify-center items-center transition-colors"><Plus size={16} className="mr-2" /> Add Contact</button>}
                     </div>
                 )}
 
@@ -355,15 +287,20 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
             </div>
 
             {/* Navigation Buttons */}
-            <div className="mt-8 flex justify-between">
-                <button onClick={currentStep === 1 ? () => window.history.back() : prevStep} className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium flex items-center">
+            <div className="mt-12 flex justify-between">
+                <button onClick={currentStep === 1 ? () => window.history.back() : prevStep} className="px-8 py-3 border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 font-medium flex items-center transition-all duration-200 hover:shadow-md">
                     <ChevronLeft size={18} className="mr-1" /> Back
                 </button>
 
                 {currentStep < totalSteps ? (
-                    <button onClick={nextStep} className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium flex items-center shadow-md shadow-red-200">Next Step <ChevronRight size={18} className="ml-1" /></button>
+                    <button onClick={nextStep} className="px-8 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold flex items-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
+                        Next Step <ChevronRight size={18} className="ml-1" />
+                    </button>
                 ) : (
-                    <button onClick={() => onSubmit(formData)} className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium flex items-center shadow-md shadow-green-200">
+                    <button onClick={() => {
+                        console.log('Final form data:', formData); // Debug log
+                        onSubmit(formData);
+                    }} className="px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-semibold flex items-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
                         {isEditing ? 'Save Changes' : 'Complete Profile'} <Save size={18} className="ml-2" />
                     </button>
                 )}

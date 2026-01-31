@@ -14,7 +14,23 @@ from app.models import Base
 # =============================================================================
 
 # Create all database tables
+# Create all database tables
 Base.metadata.create_all(bind=engine)
+
+from app.database import SessionLocal
+from app.routes.reference import populate_reference_data
+
+# Auto-seed database
+try:
+    db = SessionLocal()
+    from app.seeds.medical_data import seed_data
+    seed_data()
+    print("Database seeded successfully")
+except Exception as e:
+    print(f"Error seeding database: {e}")
+finally:
+    if 'db' in locals():
+        db.close()
 
 # =============================================================================
 # APP CONFIGURATION

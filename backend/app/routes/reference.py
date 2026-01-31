@@ -40,12 +40,54 @@ def get_all_reference_data(db: Session = Depends(get_db)):
             
     return result
 
-@router.post("/seed", status_code=status.HTTP_201_CREATED)
-def seed_reference_data(db: Session = Depends(get_db)):
+@router.get("/search", response_model=Dict[str, List[Dict[str, Any]]])
+def search_references(
+    q: str = "",
+    category: str = None,
+    db: Session = Depends(get_db)
+):
     """
-    Seed initial reference data.
+    Search reference data.
+    q: Search query (matches name or subcategory)
+    category: Optional filter (Allergies, Medications, Conditions)
     """
-    # Check if data exists
+    # Base query
+    query = db.query(ReferenceData)
+    
+    # Filter by category if provided
+    if category:
+        query = query.filter(ReferenceData.category == category)
+        
+    # Filter by search string (name or subcategory) if query provided
+    if q.strip():
+        search_term = f"%{q}%"
+        query = query.filter(
+            (ReferenceData.name.ilike(search_term)) | 
+            (ReferenceData.subcategory.ilike(search_term))
+        )
+    
+    # Limit results
+    results = query.limit(20).all()
+    
+    # Group results
+    grouped = {}
+    
+    for item in results:
+        group_key = item.subcategory if item.subcategory else item.category
+        if not group_key:
+            group_key = "General"
+            
+        if group_key not in grouped:
+            grouped[group_key] = []
+            
+        grouped[group_key].append(item.to_dict())
+        
+    return grouped
+
+def populate_reference_data(db: Session):
+    """
+    Core seeding logic that can be called from endpoint or startup.
+    """
     if db.query(ReferenceData).first():
         return {"message": "Reference data already seeded"}
         
@@ -124,3 +166,10 @@ def seed_reference_data(db: Session = Depends(get_db)):
     
     db.commit()
     return {"message": "Reference data seeded successfully", "count": len(initial_data)}
+
+@router.post("/seed", status_code=status.HTTP_201_CREATED)
+def seed_reference_data(db: Session = Depends(get_db)):
+    """
+    Seed initial reference data.
+    """
+    return populate_reference_data(db)
