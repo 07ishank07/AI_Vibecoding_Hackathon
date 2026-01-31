@@ -20,19 +20,61 @@ Scan QR code → Instant medical info + AI voice assistant + Auto-notify family
 docker-compose up
 ```
 
-Visit http://localhost:3000
+**Services:**
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+
+**Status:** ✅ All systems operational
 
 ## 📱 How It Works
-1. Create profile at crisislink.cv
-2. Print QR code (keep in wallet)
-3. Emergency happens → Scan QR
-4. AI speaks medical info in responder's language
-5. Family auto-notified with location
+1. **Create Profile**: Visit `/create-profile` for 4-step wizard
+2. **Generate QR Code**: Automatic QR generation for wallet/ID
+3. **Emergency Access**: Scan QR → `/emergency/[username]`
+4. **AI Voice**: Medical summary in responder's language
+5. **Auto-Notify**: SMS alerts to emergency contacts
+
+## 🎯 Current Features
+- ✅ **Profile Creation**: 4-step wizard (Basic Info, Medical, Contacts, Privacy)
+- ✅ **Emergency Access**: Public + Medical Professional views
+- ✅ **Contextual Navigation**: Adapts based on page type and user role
+- ✅ **Encrypted Storage**: Medical data secured with Fernet encryption
+- ✅ **QR Code Generation**: Base64 PNG codes for emergency access
+- ✅ **Demo Notifications**: SMS system ready (demo mode)
+- ✅ **Responsive Design**: Mobile and desktop optimized
 
 ## 🏆 Hackathon Integration
-- ✅ Daytona: Entire backend runs in secure workspace
-- ✅ LeanMCP: 5 production MCP agents
-- ✅ AI/ML API: Translation + TTS
+- ✅ **Daytona**: Entire backend runs in secure workspace
+- 🔄 **LeanMCP**: 5 MCP agents defined (integration pending)
+- 🔄 **AI/ML API**: Translation + TTS (placeholder implementation)
+- ✅ **Docker**: Full containerization with PostgreSQL
+- ✅ **TypeScript**: Full-stack type safety
+- ✅ **Security**: Encrypted medical data storage
+
+## 🛠️ Development Status
+
+### ✅ Completed
+- Docker containerization (Backend, Frontend, Database)
+- FastAPI backend with SQLAlchemy ORM
+- Next.js frontend with TypeScript
+- Contextual navigation system
+- Profile creation wizard
+- Emergency access pages
+- Medical data encryption
+- QR code generation
+- Demo notification system
+
+### 🔄 In Progress
+- MCP agents integration
+- Real AI/ML API connection
+- User authentication system
+- Twilio SMS integration
+
+### 📋 Next Steps
+- Connect MCP agents to backend
+- Implement user registration/login
+- Add real TTS/translation APIs
+- Deploy to production environment
 
 
 Technical Specification: CrisisLink.cv
