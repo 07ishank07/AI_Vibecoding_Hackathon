@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.config import settings
-from app.routes import profiles, emergency, auth, dashboard, reference
+from app.routes import profiles, emergency, auth, dashboard, reference, qr
 from app.database import engine
 from app.models import Base
 
@@ -69,6 +69,9 @@ app.include_router(dashboard.router)
 
 # Reference data routes
 app.include_router(reference.router)
+
+# QR code generation routes
+app.include_router(qr.router, prefix="/api/qr")
 
 # =============================================================================
 # ROOT ENDPOINTS

@@ -116,10 +116,10 @@ export default function MedicalDashboard() {
     // Loading state
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+            <div className="min-h-screen bg-slate-900 flex items-center justify-center">
                 <div className="text-center">
-                    <Loader2 className="h-12 w-12 text-blue-600 animate-spin mx-auto mb-4" />
-                    <p className="text-gray-600">Loading dashboard...</p>
+                    <Loader2 className="h-12 w-12 text-blue-500 animate-spin mx-auto mb-4" />
+                    <p className="text-slate-300">Loading dashboard...</p>
                 </div>
             </div>
         );
@@ -128,13 +128,13 @@ export default function MedicalDashboard() {
     // Error state
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+            <div className="min-h-screen bg-slate-900 flex items-center justify-center">
                 <div className="text-center">
-                    <AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" />
-                    <p className="text-gray-600 mb-4">{error}</p>
+                    <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                    <p className="text-slate-300 mb-4">{error}</p>
                     <button
                         onClick={() => router.push('/login')}
-                        className="text-blue-600 hover:text-blue-700 font-medium"
+                        className="text-blue-400 hover:text-blue-300 font-medium"
                     >
                         Back to Login
                     </button>
@@ -144,34 +144,34 @@ export default function MedicalDashboard() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="min-h-screen bg-slate-900">
             {/* Header */}
-            <div className="bg-white shadow-sm border-b border-gray-200">
+            <div className="bg-slate-800/50 backdrop-blur border-b border-slate-700">
                 <div className="max-w-7xl mx-auto px-6 py-4">
                     <div className="flex justify-between items-center">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">
+                            <h1 className="text-3xl font-bold text-white">
                                 Medical Professional Dashboard
                             </h1>
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-sm text-slate-400 mt-1">
                                 {doctorInfo?.doctor?.hospital_name || 'Emergency Medical Information Access Portal'}
                             </p>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <button className="relative p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors">
+                            <button className="relative p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 rounded-full transition-colors">
                                 <Bell size={20} />
                             </button>
                             <div className="flex items-center space-x-2">
                                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
                                     {doctorInfo?.user?.username?.substring(0, 2).toUpperCase() || 'DR'}
                                 </div>
-                                <span className="text-sm font-medium text-gray-700">
+                                <span className="text-sm font-medium text-slate-300">
                                     Dr. {doctorInfo?.user?.username || 'Medical'}
                                 </span>
                             </div>
                             <button
                                 onClick={handleLogout}
-                                className="flex items-center text-gray-600 hover:text-gray-800"
+                                className="flex items-center text-slate-400 hover:text-slate-200 transition-colors"
                             >
                                 <LogOut size={16} className="mr-1" />
                                 Sign Out

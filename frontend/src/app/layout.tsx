@@ -1,4 +1,5 @@
 import './globals.css'
+import VersionDisplay from '../components/VersionDisplay'
 
 export default function RootLayout({
   children,
@@ -7,7 +8,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <VersionDisplay />
+        {children}
+      </body>
     </html>
   )
 }

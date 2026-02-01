@@ -5,10 +5,6 @@ import { useRouter } from 'next/navigation';
 import { User, Lock, Stethoscope, AlertCircle, ArrowRight } from 'lucide-react';
 import { login, setAuthToken, setUserInfo } from '@/lib/api';
 
-// =============================================================================
-// LOGIN PAGE
-// =============================================================================
-
 export default function Login() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -19,17 +15,11 @@ export default function Login() {
     password: '',
   });
 
-  /**
-   * Handle form field changes
-   */
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setError(null);
   };
 
-  /**
-   * Handle form submission
-   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -47,11 +37,9 @@ export default function Login() {
         password: formData.password,
       });
 
-      // Store auth data
       setAuthToken(response.access_token);
       setUserInfo(response.user_id, response.user_type);
 
-      // Redirect based on user type
       if (response.user_type === 'doctor') {
         router.push('/medical-dashboard');
       } else {
@@ -66,40 +54,43 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center py-12 px-4">
+      <div className="max-w-md w-full">
         {/* Header */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome Back to CrisisLink<span className="text-red-600">.cv</span>
+        <div className="text-center mb-8">
+          <div className="inline-block border border-red-500/30 rounded-full px-4 py-2 mb-6">
+            <span className="text-red-400 text-sm font-medium">SECURE ACCESS</span>
+          </div>
+          <h1 className="text-3xl font-black text-white mb-3 tracking-tight">
+            Welcome Back
           </h1>
-          <p className="text-gray-600">Sign in to manage your life passport</p>
+          <p className="text-slate-400">Access your CrisisLink.cv life passport</p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Error Alert */}
             {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
-                <AlertCircle className="h-5 w-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-red-700">{error}</span>
+              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start">
+                <AlertCircle className="h-5 w-5 text-red-400 mr-3 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-red-300">{error}</span>
               </div>
             )}
 
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-300 mb-3">
                 Email Address
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                <User className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  placeholder="Enter your email"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                  placeholder="Enter your email address"
                   required
                 />
               </div>
@@ -107,16 +98,16 @@ export default function Login() {
 
             {/* Password Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-300 mb-3">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
                 <input
                   type="password"
                   value={formData.password}
                   onChange={(e) => handleChange('password', e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                   placeholder="Enter your password"
                   required
                 />
@@ -127,46 +118,57 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 font-semibold flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full bg-red-600 hover:bg-red-700 text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
             >
               {isLoading ? (
-                <span>Signing In...</span>
+                <div className="flex items-center">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3"></div>
+                  Signing In...
+                </div>
               ) : (
                 <>
-                  Sign In
+                  Access Dashboard
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </>
               )}
             </button>
           </form>
 
+          {/* Demo Login */}
+          <div className="mt-6 p-4 bg-slate-700/30 rounded-xl border border-slate-600">
+            <p className="text-slate-300 text-sm mb-2 font-medium">Demo Access:</p>
+            <p className="text-slate-400 text-xs">Email: demo@crisislink.cv | Password: demo123</p>
+          </div>
+
           {/* Signup Links */}
-          <div className="mt-6 text-center space-y-3">
-            <p className="text-sm text-gray-600">
-              Don't have an account?
+          <div className="mt-8 text-center">
+            <p className="text-slate-400 text-sm mb-4">
+              Need an account?
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="grid grid-cols-2 gap-3">
               <a
                 href="/signup"
-                className="inline-flex items-center justify-center px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
+                className="flex items-center justify-center px-4 py-3 border border-slate-600 text-slate-300 rounded-xl hover:bg-slate-700/50 transition-all text-sm font-medium"
               >
                 <User className="h-4 w-4 mr-2" />
-                Patient Signup
+                Patient
               </a>
               <a
                 href="/signup/doctor"
-                className="inline-flex items-center justify-center px-4 py-2 border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm font-medium"
+                className="flex items-center justify-center px-4 py-3 border border-blue-500/50 text-blue-400 rounded-xl hover:bg-blue-500/10 transition-all text-sm font-medium"
               >
                 <Stethoscope className="h-4 w-4 mr-2" />
-                Doctor Signup
+                Doctor
               </a>
             </div>
           </div>
         </div>
 
         {/* Back to Home */}
-        <div className="text-center text-sm text-gray-500">
-          <a href="/" className="hover:text-gray-700">← Back to Home</a>
+        <div className="text-center mt-8">
+          <a href="/" className="text-slate-400 hover:text-slate-300 text-sm transition-colors">
+            ← Return to Homepage
+          </a>
         </div>
       </div>
     </div>

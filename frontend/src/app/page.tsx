@@ -4,67 +4,94 @@ export default function Home() {
   return (
     <>
       <Navigation context="public" userType="public" currentPage="/" />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <div className="mb-8">
-            <h1 className="text-5xl font-bold text-gray-900 mb-4">
-              CrisisLink<span className="text-red-600">.cv</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-2">Your Life Passport</p>
-            <p className="text-lg text-gray-500">
-              Instant medical info + AI voice assistant + Auto-notify family
-            </p>
-          </div>
+      <div className="min-h-screen bg-slate-900 text-white">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 to-slate-900"></div>
+          <div className="relative max-w-6xl mx-auto px-6 py-24">
+            <div className="text-center mb-16">
+              <div className="inline-block border border-red-500/30 rounded-full px-4 py-2 mb-6">
+                <span className="text-red-400 text-sm font-medium">EMERGENCY MEDICAL SYSTEM</span>
+              </div>
+              <h1 className="text-6xl font-black mb-6 tracking-tight">
+                Crisis<span className="text-red-500">Link</span><span className="text-gray-400">.cv</span>
+              </h1>
+              <p className="text-2xl text-gray-300 mb-4 font-light">Your Digital Life Passport</p>
+              <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                Instant medical access through QR technology with AI-powered voice assistance and automated emergency notifications
+              </p>
+            </div>
 
-          <div className="bg-white rounded-lg shadow-xl p-8 mb-8">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                  🚨 The Problem
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  250,000+ preventable deaths occur annually due to delayed access to medical information in emergencies.
-                </p>
-                
-                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                  💡 Our Solution
-                </h2>
-                <p className="text-gray-600">
-                  Scan QR code → Instant medical info + AI voice assistant + Auto-notify family
+            {/* Problem & Solution Cards */}
+            <div className="grid lg:grid-cols-2 gap-8 mb-16">
+              <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-8">
+                <div className="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center mb-6">
+                  <div className="w-6 h-6 bg-red-500 rounded-full"></div>
+                </div>
+                <h2 className="text-2xl font-bold mb-4 text-white">Critical Problem</h2>
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  Over 250,000 preventable deaths occur annually due to delayed access to critical medical information during emergencies.
                 </p>
               </div>
               
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">How It Works</h3>
-                <ol className="text-left text-gray-600 space-y-2">
-                  <li>1. Create profile at crisislink.cv</li>
-                  <li>2. Print QR code (keep in wallet)</li>
-                  <li>3. Emergency happens → Scan QR</li>
-                  <li>4. AI speaks medical info in responder's language</li>
-                  <li>5. Family auto-notified with location</li>
-                </ol>
+              <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-8">
+                <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-6">
+                  <div className="w-6 h-6 bg-green-500 rounded-full"></div>
+                </div>
+                <h2 className="text-2xl font-bold mb-4 text-white">Our Solution</h2>
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  QR code scanning provides instant medical data access with multilingual AI voice assistance and automatic family notification.
+                </p>
               </div>
             </div>
-          </div>
 
-          <div className="space-x-4">
-            <a 
-              href="/create-profile" 
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200"
-            >
-              Create Your Life Passport
-            </a>
-            <a 
-              href="/emergency/demo" 
-              className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-200"
-            >
-              View Demo
-            </a>
-          </div>
+            {/* Process Flow */}
+            <div className="bg-slate-800/30 backdrop-blur border border-slate-700 rounded-2xl p-8 mb-16">
+              <h3 className="text-2xl font-bold text-center mb-8 text-white">Emergency Response Process</h3>
+              <div className="grid md:grid-cols-5 gap-6">
+                {[
+                  { step: "01", title: "Create Profile", desc: "Set up medical information" },
+                  { step: "02", title: "Generate QR", desc: "Print for wallet or ID" },
+                  { step: "03", title: "Emergency Scan", desc: "Responder scans code" },
+                  { step: "04", title: "AI Voice", desc: "Medical summary spoken" },
+                  { step: "05", title: "Auto Notify", desc: "Family contacted instantly" }
+                ].map((item, index) => (
+                  <div key={index} className="text-center">
+                    <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <span className="text-white font-bold text-sm">{item.step}</span>
+                    </div>
+                    <h4 className="font-semibold text-white mb-2">{item.title}</h4>
+                    <p className="text-gray-400 text-sm">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          <div className="mt-12 text-sm text-gray-500">
-            <p>🏆 Built for AI Vibecoding Hackathon</p>
-            <p>✅ Daytona • ✅ LeanMCP • ✅ AI/ML API</p>
+            {/* CTA Buttons */}
+            <div className="text-center space-x-6">
+              <a 
+                href="/create-profile" 
+                className="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
+              >
+                Create Life Passport
+              </a>
+              <a 
+                href="/emergency/demo" 
+                className="inline-block border border-slate-600 hover:border-slate-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 hover:bg-slate-800"
+              >
+                View Demo Profile
+              </a>
+            </div>
+
+            {/* Tech Stack */}
+            <div className="mt-20 text-center">
+              <div className="inline-flex items-center space-x-8 bg-slate-800/50 backdrop-blur border border-slate-700 rounded-full px-8 py-4">
+                <span className="text-gray-400 text-sm font-medium">POWERED BY</span>
+                <span className="text-white font-semibold">Daytona</span>
+                <span className="text-white font-semibold">LeanMCP</span>
+                <span className="text-white font-semibold">AI/ML API</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
