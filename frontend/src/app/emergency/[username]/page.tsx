@@ -1,255 +1,203 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AlertTriangle, Phone, Heart, User, Shield, Clock } from 'lucide-react';
-import Navigation from '../../../components/Navigation';
+import { AlertTriangle, Heart, Pill, Phone, User, Clock } from 'lucide-react';
 
-// Mock data - replace with API call
-const mockProfileData = {
-  fullName: 'John Smith',
-  dateOfBirth: '1985-03-15',
-  bloodType: 'O+',
-  allergies: 'Penicillin, Shellfish',
-  medications: 'Lisinopril 10mg daily, Metformin 500mg twice daily',
-  medicalConditions: 'Type 2 Diabetes, Hypertension',
-  contacts: [
-    { name: 'Sarah Smith', phone: '+1-555-0123', relation: 'Spouse', priority: 1 },
-    { name: 'Michael Smith', phone: '+1-555-0456', relation: 'Brother', priority: 2 }
-  ],
-  publicVisible: {
-    name: true,
-    bloodType: true,
-    allergies: false,
-    medications: false,
-    conditions: false,
-    contacts: false
-  }
-};
+interface EmergencyData {
+  full_name: string;
+  blood_type: string;
+  allergies: string[];
+  medications: string[];
+  medical_conditions: string[];
+  dnr_status: boolean;
+  special_instructions: string;
+  emergency_contacts: Array<{
+    name: string;
+    phone: string;
+    priority: number;
+  }>;
+  languages: string[];
+}
 
-export default function EmergencyAccess({ params }) {
-  const [profile, setProfile] = useState(null);
+export default function EmergencyAccess({ params }: { params: { username: string } }) {
+  const [emergencyData, setEmergencyData] = useState<EmergencyData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMedicalProfessional, setIsMedicalProfessional] = useState(false);
-  const [showEmergencyAccess, setShowEmergencyAccess] = useState(false);
-  const [accessTime] = useState(new Date());
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setProfile(mockProfileData);
-      setIsLoading(false);
-    }, 1000);
+    const fetchEmergencyData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/api/emergency/${params.username}`);
+        if (!response.ok) {
+          throw new Error('Patient not found');
+        }
+        const data = await response.json();
+        setEmergencyData(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEmergencyData();
   }, [params.username]);
-
-  const handleEmergencyAccess = () => {
-    setShowEmergencyAccess(true);
-    // TODO: Log emergency access, notify contacts
-  };
-
-  const calculateAge = (birthDate) => {
-    const today = new Date();
-    const birth = new Date(birthDate);
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
-  };
 
   if (isLoading) {
     return (
-      <>
-        <Navigation context="emergency" />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading emergency profile...</p>
-          </div>
+      <div className="min-h-screen bg-red-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+          <p className="text-red-600 font-medium">Loading emergency information...</p>
         </div>
-      </>
+      </div>
     );
   }
 
-  if (!profile) {
+  if (error || !emergencyData) {
     return (
-      <>
-        <Navigation context="emergency" />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <AlertTriangle className="h-16 w-16 text-red-600 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Profile Not Found</h1>
-            <p className="text-gray-600">The requested emergency profile could not be found.</p>
-          </div>
+      <div className="min-h-screen bg-red-50 flex items-center justify-center">
+        <div className="text-center">
+          <AlertTriangle className="h-16 w-16 text-red-600 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-red-800 mb-2">Patient Not Found</h1>
+          <p className="text-red-600">Unable to load emergency information for this patient.</p>
         </div>
-      </>
+      </div>
     );
   }
-
-  const showFullAccess = isMedicalProfessional && showEmergencyAccess;
 
   return (
-    <>
-      <Navigation context="emergency" />
-      <div className="min-h-screen bg-gray-50 py-6">
-        <div className="max-w-4xl mx-auto px-4">
-          {/* Header */}
-          <div className="bg-red-600 text-white rounded-lg p-6 mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold mb-2">🚨 Emergency Medical Profile</h1>
-                <p className="text-red-100">Accessed: {accessTime.toLocaleString()}</p>
-              </div>
-              <AlertTriangle className="h-12 w-12" />
+    <div className="min-h-screen bg-red-50 py-6">
+      <div className="max-w-4xl mx-auto px-4">
+        {/* Emergency Header */}
+        <div className="bg-red-600 text-white rounded-lg p-6 mb-6 shadow-lg">
+          <div className="flex items-center mb-4">
+            <AlertTriangle className="h-8 w-8 mr-3" />
+            <div>
+              <h1 className="text-3xl font-bold">EMERGENCY ACCESS</h1>
+              <p className="text-red-100">Medical information accessed at {new Date().toLocaleString()}</p>
             </div>
           </div>
-
-          {/* Medical Professional Access */}
-          {!showFullAccess && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <div className="text-center">
-                <Shield className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Medical Professional Access</h2>
-                <p className="text-gray-600 mb-6">
-                  Are you a medical professional or emergency responder? Access full emergency details.
-                </p>
-                <div className="space-y-3">
-                  <button
-                    onClick={() => {
-                      setIsMedicalProfessional(true);
-                      handleEmergencyAccess();
-                    }}
-                    className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 font-semibold"
-                  >
-                    🏥 Emergency Medical Access
-                  </button>
-                  <p className="text-sm text-gray-500">
-                    This will notify emergency contacts and log the access
-                  </p>
+          <div className="bg-red-700 rounded-lg p-4">
+            <h2 className="text-2xl font-bold mb-2">{emergencyData.full_name}</h2>
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center">
+                <span className="text-red-100 mr-2">Blood Type:</span>
+                <span className="text-3xl font-bold">{emergencyData.blood_type}</span>
+              </div>
+              {emergencyData.dnr_status && (
+                <div className="bg-yellow-500 text-black px-3 py-1 rounded font-bold">
+                  DNR STATUS
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/* Rest of the emergency access content remains the same */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Personal Information */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center mb-4">
-                <User className="h-6 w-6 text-gray-600 mr-2" />
-                <h2 className="text-xl font-semibold text-gray-800">Personal Information</h2>
-              </div>
-              
-              <div className="space-y-3">
-                {(profile.publicVisible.name || showFullAccess) && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500">Full Name</label>
-                    <p className="text-lg font-semibold text-gray-900">{profile.fullName}</p>
-                  </div>
-                )}
-                
-                {showFullAccess && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500">Age</label>
-                    <p className="text-lg text-gray-900">{calculateAge(profile.dateOfBirth)} years old</p>
-                  </div>
-                )}
-                
-                {(profile.publicVisible.bloodType || showFullAccess) && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500">Blood Type</label>
-                    <p className="text-2xl font-bold text-red-600">{profile.bloodType}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Medical Information */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center mb-4">
-                <Heart className="h-6 w-6 text-red-600 mr-2" />
-                <h2 className="text-xl font-semibold text-gray-800">Medical Information</h2>
-              </div>
-              
-              <div className="space-y-4">
-                {(profile.publicVisible.allergies || showFullAccess) && profile.allergies && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <label className="block text-sm font-medium text-red-700 mb-1">⚠️ ALLERGIES</label>
-                    <p className="text-red-800 font-semibold">{profile.allergies}</p>
-                  </div>
-                )}
-                
-                {(profile.publicVisible.medications || showFullAccess) && profile.medications && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Current Medications</label>
-                    <p className="text-gray-900">{profile.medications}</p>
-                  </div>
-                )}
-                
-                {(profile.publicVisible.conditions || showFullAccess) && profile.medicalConditions && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Medical Conditions</label>
-                    <p className="text-gray-900">{profile.medicalConditions}</p>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Emergency Contacts */}
-          {(profile.publicVisible.contacts || showFullAccess) && (
-            <div className="bg-white rounded-lg shadow-md p-6 mt-6">
-              <div className="flex items-center mb-4">
-                <Phone className="h-6 w-6 text-green-600 mr-2" />
-                <h2 className="text-xl font-semibold text-gray-800">Emergency Contacts</h2>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-4">
-                {profile.contacts.map((contact, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-gray-900">{contact.name}</h3>
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                        Priority {contact.priority}
-                      </span>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-2">{contact.relation}</p>
-                    <a 
-                      href={`tel:${contact.phone}`}
-                      className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      {contact.phone}
-                    </a>
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Critical Allergies */}
+          <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-red-500">
+            <div className="flex items-center mb-4">
+              <AlertTriangle className="h-6 w-6 text-red-500 mr-2" />
+              <h3 className="text-xl font-bold text-red-800">⚠️ ALLERGIES</h3>
+            </div>
+            {emergencyData.allergies.length > 0 ? (
+              <div className="space-y-2">
+                {emergencyData.allergies.map((allergy, index) => (
+                  <div key={index} className="bg-red-100 border border-red-300 rounded-lg p-3">
+                    <span className="font-bold text-red-800 text-lg">{allergy}</span>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <p className="text-gray-500 italic">No known allergies</p>
+            )}
+          </div>
 
-          {/* Emergency Access Confirmation */}
-          {showFullAccess && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 mt-6">
-              <div className="flex items-center mb-2">
-                <Clock className="h-5 w-5 text-green-600 mr-2" />
-                <h3 className="font-semibold text-green-800">Emergency Access Activated</h3>
+          {/* Medical Conditions */}
+          <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+            <div className="flex items-center mb-4">
+              <Heart className="h-6 w-6 text-blue-500 mr-2" />
+              <h3 className="text-xl font-bold text-blue-800">Medical Conditions</h3>
+            </div>
+            {emergencyData.medical_conditions.length > 0 ? (
+              <div className="space-y-2">
+                {emergencyData.medical_conditions.map((condition, index) => (
+                  <div key={index} className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <span className="font-medium text-blue-800">{condition}</span>
+                  </div>
+                ))}
               </div>
-              <p className="text-green-700 text-sm">
-                Emergency contacts have been automatically notified. Full medical information is now visible.
-              </p>
-            </div>
-          )}
+            ) : (
+              <p className="text-gray-500 italic">No known conditions</p>
+            )}
+          </div>
 
-          {/* Limited Access Notice */}
-          {!showFullAccess && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-6">
-              <p className="text-blue-800 text-sm">
-                <strong>Limited Information:</strong> Only publicly visible information is shown. 
-                Medical professionals can access full emergency details above.
-              </p>
+          {/* Current Medications */}
+          <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-green-500">
+            <div className="flex items-center mb-4">
+              <Pill className="h-6 w-6 text-green-500 mr-2" />
+              <h3 className="text-xl font-bold text-green-800">Current Medications</h3>
             </div>
-          )}
+            {emergencyData.medications.length > 0 ? (
+              <div className="space-y-2">
+                {emergencyData.medications.map((medication, index) => (
+                  <div key={index} className="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <span className="font-medium text-green-800">{medication}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500 italic">No current medications</p>
+            )}
+          </div>
+
+          {/* Emergency Contacts */}
+          <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-purple-500">
+            <div className="flex items-center mb-4">
+              <Phone className="h-6 w-6 text-purple-500 mr-2" />
+              <h3 className="text-xl font-bold text-purple-800">Emergency Contacts</h3>
+            </div>
+            {emergencyData.emergency_contacts.length > 0 ? (
+              <div className="space-y-3">
+                {emergencyData.emergency_contacts.map((contact, index) => (
+                  <div key={index} className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <span className="font-bold text-purple-800">{contact.name}</span>
+                        <p className="text-purple-600 font-mono text-lg">{contact.phone}</p>
+                      </div>
+                      <span className="text-xs bg-purple-200 text-purple-800 px-2 py-1 rounded">
+                        Priority {contact.priority}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500 italic">No emergency contacts</p>
+            )}
+          </div>
+        </div>
+
+        {/* Special Instructions */}
+        {emergencyData.special_instructions && (
+          <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h3 className="text-xl font-bold text-yellow-800 mb-3">Special Instructions</h3>
+            <p className="text-yellow-700 text-lg">{emergencyData.special_instructions}</p>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="mt-8 bg-gray-100 rounded-lg p-4 text-center">
+          <p className="text-gray-600 text-sm">
+            Emergency contacts have been automatically notified of this access.
+          </p>
+          <p className="text-gray-500 text-xs mt-2">
+            CrisisLink.cv - Emergency Medical Information System
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 }

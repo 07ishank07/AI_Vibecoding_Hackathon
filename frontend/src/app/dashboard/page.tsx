@@ -181,41 +181,41 @@ export default function Dashboard() {
         )}
 
         {/* Profile Status */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg shadow-md p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Profile Status</h2>
-            <span className="text-sm text-gray-500">
+            <h2 className="text-xl font-semibold text-white">Profile Status</h2>
+            <span className="text-sm text-slate-400">
               Last accessed: {dashboardData?.last_accessed || 'Never'}
             </span>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <User className="h-8 w-8 text-green-600" />
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <User className="h-8 w-8 text-red-600" />
               </div>
-              <h3 className="font-semibold text-gray-800">Profile Complete</h3>
-              <p className="text-2xl font-bold text-green-600">
+              <h3 className="font-semibold text-white">Profile Complete</h3>
+              <p className="text-2xl font-bold text-red-500">
                 {profile?.completion_percentage || 0}%
               </p>
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <QrCode className="h-8 w-8 text-blue-600" />
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <QrCode className="h-8 w-8 text-red-600" />
               </div>
-              <h3 className="font-semibold text-gray-800">QR Code</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-white">QR Code</h3>
+              <p className="text-sm text-slate-300">
                 {profile?.qr_generated ? 'Generated & Ready' : 'Not Generated'}
               </p>
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Eye className="h-8 w-8 text-purple-600" />
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Eye className="h-8 w-8 text-red-600" />
               </div>
-              <h3 className="font-semibold text-gray-800">Privacy</h3>
-              <p className="text-sm text-gray-600">Configured</p>
+              <h3 className="font-semibold text-white">Privacy</h3>
+              <p className="text-sm text-slate-300">Configured</p>
             </div>
           </div>
         </div>
@@ -224,74 +224,79 @@ export default function Dashboard() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <a
             href={hasProfile ? `/profile/${user?.username}` : '/create-profile'}
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+            className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
           >
             <div className="flex items-center mb-3">
-              <Eye className="h-6 w-6 text-blue-600 mr-2" />
-              <h3 className="font-semibold text-gray-800">
+              <Eye className="h-6 w-6 text-red-500 mr-2" />
+              <h3 className="font-semibold text-white">
                 {hasProfile ? 'Preview Profile' : 'Create Profile'}
               </h3>
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-slate-300">
               {hasProfile ? 'See how others view your profile' : 'Set up your emergency profile'}
             </p>
           </a>
 
           <a
             href="/create-profile"
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+            className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
           >
             <div className="flex items-center mb-3">
-              <Edit className="h-6 w-6 text-green-600 mr-2" />
-              <h3 className="font-semibold text-gray-800">Edit Profile</h3>
+              <Edit className="h-6 w-6 text-red-500 mr-2" />
+              <h3 className="font-semibold text-white">Edit Profile</h3>
             </div>
-            <p className="text-sm text-gray-600">Update your medical information</p>
+            <p className="text-sm text-slate-300">Update your medical information</p>
           </a>
 
-          <button className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left">
+          <button 
+            onClick={() => {
+              if (fullProfile?.qr_code_url) {
+                const link = document.createElement('a');
+                link.href = fullProfile.qr_code_url;
+                link.download = `emergency-qr-${fullProfile.full_name}.png`;
+                link.click();
+              }
+            }}
+            className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
+          >
             <div className="flex items-center mb-3">
-              <Download className="h-6 w-6 text-purple-600 mr-2" />
-              <h3 className="font-semibold text-gray-800">Download QR</h3>
+              <Download className="h-6 w-6 text-red-500 mr-2" />
+              <h3 className="font-semibold text-white">Download QR</h3>
             </div>
-            <p className="text-sm text-gray-600">Print your emergency QR code</p>
+            <p className="text-sm text-slate-300">Print your emergency QR code</p>
           </button>
 
           <button
             onClick={() => router.push('/edit-profile')}
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
+            className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
           >
             <div className="flex items-center mb-3">
-              <Settings className="h-6 w-6 text-gray-600 mr-2" />
-              <h3 className="font-semibold text-gray-800">Profile Settings</h3>
+              <Settings className="h-6 w-6 text-red-500 mr-2" />
+              <h3 className="font-semibold text-white">Profile Settings</h3>
             </div>
-            <p className="text-sm text-gray-600">Edit profile and privacy</p>
+            <p className="text-sm text-slate-300">Edit profile and privacy</p>
           </button>
         </div>
 
-        {/* Debug Info */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-          <h3 className="font-semibold text-yellow-800 mb-2">Debug - Full Profile Data</h3>
-          <pre className="text-xs text-yellow-700 max-h-40 overflow-y-auto">
-            {JSON.stringify(fullProfile, null, 2)}
-          </pre>
-        </div>
+
 
         {/* Profile Preview */}
         {hasProfile && fullProfile && (
           <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Medical Information Preview</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">Medical Information Preview</h2>
             <ProfilePreview profile={fullProfile} />
           </div>
         )}
 
-        {/* Profile Summary with QR Code */}
+        {/* Profile Summary */}
         {hasProfile && (
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-6">
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Profile Info */}
+            <div className="md:col-span-2 bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-white">Profile Summary</h2>
                 <a
-                  href="/create-profile"
+                  href="/edit-profile"
                   className="flex items-center text-blue-400 hover:text-blue-300"
                 >
                   <Edit size={16} className="mr-1" />
@@ -335,9 +340,37 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            
-            {/* QR Code Display */}
-            <QRCodeDisplay username={user?.username || ''} />
+
+            {/* QR Code */}
+            {fullProfile?.qr_code_url && (
+              <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-slate-300">Emergency QR</h3>
+                  <button 
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = fullProfile.qr_code_url;
+                      link.download = `emergency-qr-${fullProfile.full_name}.png`;
+                      link.click();
+                    }}
+                    className="flex items-center text-blue-400 hover:text-blue-300 text-sm"
+                  >
+                    <Download size={14} className="mr-1" />
+                    Download
+                  </button>
+                </div>
+                <div className="text-center">
+                  <div className="bg-white p-3 rounded-lg inline-block">
+                    <img 
+                      src={fullProfile.qr_code_url} 
+                      alt="Emergency QR Code" 
+                      className="w-32 h-32"
+                    />
+                  </div>
+                  <p className="text-xs text-slate-400 mt-2">Scan for emergency access</p>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
