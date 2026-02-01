@@ -38,7 +38,10 @@ export default function EditProfile() {
                         allergies: profileData.allergies || [],
                         medications: profileData.medications || [],
                         medicalConditions: profileData.medical_conditions || [],
-                        contacts: [{ name: '', phone: '', relation: '', priority: 1 }], // Default contacts if not in response
+                        hasAllergies: (profileData.allergies || []).length > 0,
+                        hasMedications: (profileData.medications || []).length > 0,
+                        hasConditions: (profileData.medical_conditions || []).length > 0,
+                        contacts: [{ name: '', phone: '', relation: '', priority: 1 }],
                         publicVisible: {
                             name: true,
                             bloodType: true,
