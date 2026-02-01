@@ -96,9 +96,9 @@ export default function Home() {
             <div className="mt-20 text-center">
               <div className="inline-flex items-center space-x-8 bg-gradient-to-r from-blue-50 to-green-50 rounded-full px-8 py-4 shadow-sm border border-blue-100">
                 <span className="text-gray-600 text-sm font-medium">POWERED BY</span>
-                <span className="text-gray-900 font-semibold">Daytona</span>
-                <span className="text-gray-900 font-semibold">LeanMCP</span>
-                <span className="text-gray-900 font-semibold">AI/ML API</span>
+                <span className="text-gray-900 font-semibold">Docker</span>
+                <span className="text-gray-900 font-semibold">FastAPI</span>
+                <span className="text-gray-900 font-semibold">Next.js</span>
               </div>
             </div>
           </div>

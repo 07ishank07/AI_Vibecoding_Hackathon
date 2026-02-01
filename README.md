@@ -9,11 +9,11 @@ Scan QR code → Instant medical info + AI voice assistant + Auto-notify family
 ## 🛠️ Tech Stack
 - **Backend**: Python FastAPI, PostgreSQL
 - **Frontend**: Next.js, TypeScript, Tailwind
-- **AI**: AI/ML API, CometAPI (translation, TTS)
-- **Infrastructure**: Daytona (secure sandboxed backend)
+- **AI**: OpenAI API, Translation Services
+- **Infrastructure**: Docker (containerized deployment)
 - **Identity**: .cv domains
-- **MCP**: LeanMCP (5 AI agents)
-- **Security**: Nord Security suite (encryption)
+- **Database**: PostgreSQL with encryption
+- **Security**: Fernet encryption suite
 
 ## 🏃 Quick Start
 ```bash
@@ -43,13 +43,13 @@ docker-compose up
 - ✅ **Demo Notifications**: SMS system ready (demo mode)
 - ✅ **Responsive Design**: Mobile and desktop optimized
 
-## 🏆 Hackathon Integration
-- ✅ **Daytona**: Entire backend runs in secure workspace
-- 🔄 **LeanMCP**: 5 MCP agents defined (integration pending)
-- 🔄 **AI/ML API**: Translation + TTS (placeholder implementation)
+## 🏆 Implementation Details
 - ✅ **Docker**: Full containerization with PostgreSQL
+- ✅ **FastAPI**: RESTful API with automatic documentation
+- ✅ **Next.js**: Server-side rendering and optimization
 - ✅ **TypeScript**: Full-stack type safety
-- ✅ **Security**: Encrypted medical data storage
+- ✅ **PostgreSQL**: Reliable data persistence
+- ✅ **Security**: Fernet encrypted medical data storage
 
 ## 🛠️ Development Status
 
@@ -65,16 +65,15 @@ docker-compose up
 - Demo notification system
 
 ### 🔄 In Progress
-- MCP agents integration
-- Real AI/ML API connection
+- AI/ML API integration
 - User authentication system
-- Twilio SMS integration
+- SMS notification system
 
 ### 📋 Next Steps
-- Connect MCP agents to backend
 - Implement user registration/login
 - Add real TTS/translation APIs
 - Deploy to production environment
+- Enhanced security features
 
 
 Technical Specification: CrisisLink.cv
