@@ -8,11 +8,11 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.6
 qrcode[pil]==7.4.2
-pillow==10.2.0
+pillow==10.4.0
 httpx==0.26.0
 redis==5.0.1
 twilio==8.11.1
 python-dotenv==1.0.0
 cryptography==42.0.0
 email-validator==2.1.0
-bcrypt==3.2.2
+bcrypt==4.0.1
