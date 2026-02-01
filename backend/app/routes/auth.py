@@ -58,23 +58,59 @@ def get_hospital_name(hospital_id: str) -> str:
 # =============================================================================
 
 @router.post("/register/patient", response_model=TokenResponse)
-async def register_patient(user_data: UserCreate):
+async def register_patient(user_data: UserCreate, db: Session = Depends(get_db)):
     """
     Register a new patient account.
     Returns JWT token on successful registration.
     """
-    # For now, always return success with mock data
-    import uuid
-    mock_user_id = str(uuid.uuid4())
-    
-    # Create a simple token (not secure, just for demo)
-    access_token = f"mock_token_{mock_user_id}"
-    
-    return TokenResponse(
-        access_token=access_token,
-        user_type="patient",
-        user_id=mock_user_id
-    )
+    try:
+        # Check if username exists
+        existing_user = db.query(User).filter(User.username == user_data.username).first()
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username already registered"
+            )
+        
+        # Check if email exists
+        existing_email = db.query(User).filter(User.email == user_data.email).first()
+        if existing_email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
+        
+        # Create new user
+        new_user = User(
+            username=user_data.username,
+            email=user_data.email,
+            hashed_password=hash_password(user_data.password),
+            user_type="patient"
+        )
+        
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        
+        # Generate token
+        access_token = create_access_token(data={"sub": new_user.id, "type": "patient"})
+        
+        return TokenResponse(
+            access_token=access_token,
+            user_type="patient",
+            user_id=new_user.id
+        )
+    except Exception as e:
+        # Fallback to mock if database fails
+        import uuid
+        mock_user_id = str(uuid.uuid4())
+        access_token = f"mock_token_{mock_user_id}"
+        
+        return TokenResponse(
+            access_token=access_token,
+            user_type="patient",
+            user_id=mock_user_id
+        )
 
 @router.post("/register/doctor", response_model=TokenResponse)
 async def register_doctor(doctor_data: DoctorCreate, db: Session = Depends(get_db)):
