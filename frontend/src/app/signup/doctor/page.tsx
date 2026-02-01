@@ -150,78 +150,78 @@ export default function DoctorSignup() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 flex items-center justify-center py-12 px-4">
+        <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4">
             <div className="max-w-md w-full">
                 <div className="text-center mb-8">
                     <div className="inline-block border border-blue-500/30 rounded-full px-4 py-2 mb-6">
-                        <span className="text-blue-400 text-sm font-medium">MEDICAL PROFESSIONAL</span>
+                        <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent text-sm font-medium">MEDICAL PROFESSIONAL</span>
                     </div>
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500/20 rounded-2xl mb-4">
-                        <Stethoscope className="h-8 w-8 text-blue-400" />
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4">
+                        <Stethoscope className="h-8 w-8 text-blue-600" />
                     </div>
-                    <h1 className="text-3xl font-black text-white mb-3 tracking-tight">
+                    <h1 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">
                         Medical Registration
                     </h1>
-                    <p className="text-slate-400">
+                    <p className="text-gray-600">
                         Join CrisisLink.cv for emergency patient access
                     </p>
                 </div>
 
-                <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-8">
+                <div className="bg-gradient-to-br from-blue-50 to-green-50 border border-blue-100 rounded-2xl p-8 shadow-sm">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {error && (
-                            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start">
-                                <AlertCircle className="h-5 w-5 text-red-400 mr-3 flex-shrink-0 mt-0.5" />
-                                <span className="text-sm text-red-300">{error}</span>
+                            <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-start">
+                                <AlertCircle className="h-5 w-5 text-red-600 mr-3 flex-shrink-0 mt-0.5" />
+                                <span className="text-sm text-red-800">{error}</span>
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-sm font-semibold text-slate-300 mb-3">
-                                Username <span className="text-red-400">*</span>
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                Username <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
-                                <User className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
+                                <User className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
                                 <input
                                     type="text"
                                     value={formData.username}
                                     onChange={(e) => handleChange('username', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Choose a username"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-slate-300 mb-3">
-                                Email Address <span className="text-red-400">*</span>
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                Email Address <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
-                                <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
+                                <Mail className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
                                 <input
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => handleChange('email', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Professional email address"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-slate-300 mb-3">
-                                Hospital <span className="text-red-400">*</span>
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                Hospital <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
-                                <Building className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
+                                <Building className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
                                 <select
                                     value={formData.hospital_id}
                                     onChange={(e) => handleChange('hospital_id', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none"
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none"
                                 >
-                                    <option value="" className="bg-slate-700">Select your hospital</option>
+                                    <option value="">Select your hospital</option>
                                     {hospitals.map((hospital) => (
-                                        <option key={hospital.id} value={hospital.id} className="bg-slate-700">
+                                        <option key={hospital.id} value={hospital.id}>
                                             {hospital.name}
                                         </option>
                                     ))}
@@ -231,32 +231,32 @@ export default function DoctorSignup() {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-semibold text-slate-300 mb-3">
+                                <label className="block text-sm font-semibold text-gray-700 mb-3">
                                     Specialty
                                 </label>
                                 <div className="relative">
-                                    <Stethoscope className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
+                                    <Stethoscope className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
                                     <input
                                         type="text"
                                         value={formData.specialty}
                                         onChange={(e) => handleChange('specialty', e.target.value)}
-                                        className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                         placeholder="Specialty"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-semibold text-slate-300 mb-3">
+                                <label className="block text-sm font-semibold text-gray-700 mb-3">
                                     License Number
                                 </label>
                                 <div className="relative">
-                                    <Award className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
+                                    <Award className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
                                     <input
                                         type="text"
                                         value={formData.license_number}
                                         onChange={(e) => handleChange('license_number', e.target.value)}
-                                        className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                         placeholder="License #"
                                     />
                                 </div>
@@ -264,32 +264,32 @@ export default function DoctorSignup() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-slate-300 mb-3">
-                                Password <span className="text-red-400">*</span>
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                Password <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
+                                <Lock className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
                                 <input
                                     type="password"
                                     value={formData.password}
                                     onChange={(e) => handleChange('password', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Create a password"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-slate-300 mb-3">
-                                Confirm Password <span className="text-red-400">*</span>
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                Confirm Password <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
+                                <Lock className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
                                 <input
                                     type="password"
                                     value={formData.confirmPassword}
                                     onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Confirm your password"
                                 />
                             </div>
@@ -298,7 +298,7 @@ export default function DoctorSignup() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+                            className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
                         >
                             {isLoading ? (
                                 <div className="flex items-center">
@@ -316,22 +316,22 @@ export default function DoctorSignup() {
 
                     <div className="mt-8 text-center">
                         <div className="flex items-center justify-center mb-6">
-                            <div className="border-t border-slate-600 flex-1"></div>
-                            <span className="px-4 text-slate-400 text-sm">or</span>
-                            <div className="border-t border-slate-600 flex-1"></div>
+                            <div className="border-t border-gray-300 flex-1"></div>
+                            <span className="px-4 text-gray-500 text-sm">or</span>
+                            <div className="border-t border-gray-300 flex-1"></div>
                         </div>
 
                         <a
                             href="/signup"
-                            className="inline-flex items-center text-slate-400 hover:text-slate-300 font-medium mb-4"
+                            className="inline-flex items-center text-gray-600 hover:text-gray-800 font-medium mb-4"
                         >
                             <User className="h-4 w-4 mr-2" />
                             Patient Registration
                         </a>
 
-                        <p className="text-sm text-slate-400">
+                        <p className="text-sm text-gray-600">
                             Already have an account?{' '}
-                            <a href="/login" className="text-blue-400 hover:text-blue-300 font-medium">
+                            <a href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
                                 Sign in
                             </a>
                         </p>
@@ -339,7 +339,7 @@ export default function DoctorSignup() {
                 </div>
 
                 <div className="text-center mt-8">
-                    <a href="/" className="text-slate-400 hover:text-slate-300 text-sm transition-colors">
+                    <a href="/" className="text-gray-600 hover:text-gray-800 text-sm transition-colors">
                         ← Return to Homepage
                     </a>
                 </div>
