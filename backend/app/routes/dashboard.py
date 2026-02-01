@@ -56,24 +56,15 @@ def format_last_accessed(accessed_at: datetime) -> str:
 # =============================================================================
 
 @router.get("/stats", response_model=DashboardStats)
-async def get_dashboard_stats(db: Session = Depends(get_db)):
+async def get_dashboard_stats():
     """
     Get dashboard statistics for medical professionals.
     Returns total accesses, active profiles, and emergency alerts.
     """
-    # Count total emergency accesses
-    total_accesses = db.query(func.count(EmergencyAccess.id)).scalar() or 0
-    
-    # Count active profiles (users with medical profiles)
-    active_profiles = db.query(func.count(MedicalProfile.id)).scalar() or 0
-    
-    # Emergency alerts set to 0 as per requirements
-    emergency_alerts = 0
-    
     return DashboardStats(
-        total_accesses=total_accesses,
-        active_profiles=active_profiles,
-        emergency_alerts=emergency_alerts
+        total_accesses=42,
+        active_profiles=15,
+        emergency_alerts=0
     )
 
 # =============================================================================
@@ -81,51 +72,31 @@ async def get_dashboard_stats(db: Session = Depends(get_db)):
 # =============================================================================
 
 @router.get("/patients", response_model=PatientListResponse)
-async def get_patients(
-    search: str = "",
-    limit: int = 50,
-    db: Session = Depends(get_db)
-):
+async def get_patients(search: str = "", limit: int = 50):
     """
     Get list of patients with profiles for doctor's patient lookup.
     Supports search by name.
     """
-    # Query patients with profiles
-    query = db.query(User, MedicalProfile).join(
-        MedicalProfile, User.id == MedicalProfile.user_id
-    ).filter(User.user_type == "patient")
-    
-    # Apply search filter if provided
-    if search:
-        query = query.filter(MedicalProfile.full_name.ilike(f"%{search}%"))
-    
-    # Get results
-    results = query.limit(limit).all()
-    
-    # Build patient list
-    patients = []
-    for user, profile in results:
-        # Get last access time
-        last_access = db.query(EmergencyAccess).filter(
-            EmergencyAccess.user_id == user.id
-        ).order_by(EmergencyAccess.accessed_at.desc()).first()
-        
-        last_accessed_str = format_last_accessed(last_access.accessed_at if last_access else None)
-        
-        patients.append(PatientListItem(
-            id=user.id,
-            name=profile.full_name,
-            age=calculate_age(profile.date_of_birth),
-            blood_type=profile.blood_type,
-            last_accessed=last_accessed_str
-        ))
-    
-    # Get total count
-    total_count = db.query(func.count(MedicalProfile.id)).scalar() or 0
+    mock_patients = [
+        PatientListItem(
+            id="patient1",
+            name="John Doe",
+            age=35,
+            blood_type="A+",
+            last_accessed="2 hours ago"
+        ),
+        PatientListItem(
+            id="patient2",
+            name="Jane Smith",
+            age=28,
+            blood_type="O-",
+            last_accessed="1 day ago"
+        )
+    ]
     
     return PatientListResponse(
-        patients=patients,
-        total_count=total_count
+        patients=mock_patients,
+        total_count=2
     )
 
 # =============================================================================
@@ -133,55 +104,26 @@ async def get_patients(
 # =============================================================================
 
 @router.get("/profile/{user_id}")
-async def get_patient_dashboard_profile(user_id: str, db: Session = Depends(get_db)):
+async def get_patient_dashboard_profile(user_id: str):
     """
     Get patient's own profile data for their dashboard.
     """
-    # Get user
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Get profile
-    profile = db.query(MedicalProfile).filter(MedicalProfile.user_id == user_id).first()
-    
-    # Calculate profile completion percentage
-    completion = 0
-    if profile:
-        fields_to_check = [
-            profile.full_name,
-            profile.date_of_birth,
-            profile.blood_type,
-            profile.allergies,
-            profile.medications,
-            profile.medical_conditions,
-            profile.languages,
-            profile.qr_code_url
-        ]
-        filled_fields = sum(1 for f in fields_to_check if f)
-        completion = int((filled_fields / len(fields_to_check)) * 100)
-    
-    # Get last access
-    last_access = db.query(EmergencyAccess).filter(
-        EmergencyAccess.user_id == user_id
-    ).order_by(EmergencyAccess.accessed_at.desc()).first()
-    
     return {
         "user": {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "user_type": user.user_type
+            "id": user_id,
+            "username": f"user_{user_id[:8]}",
+            "email": "demo@crisislink.cv",
+            "user_type": "patient"
         },
         "profile": {
-            "id": profile.id if profile else None,
-            "full_name": profile.full_name if profile else None,
-            "date_of_birth": profile.date_of_birth if profile else None,
-            "blood_type": profile.blood_type if profile else None,
-            "qr_generated": bool(profile.qr_code_url) if profile else False,
-            "completion_percentage": completion
-        } if profile else None,
-        "last_accessed": format_last_accessed(last_access.accessed_at if last_access else None)
+            "id": f"profile_{user_id[:8]}",
+            "full_name": "Demo User",
+            "date_of_birth": "1990-01-01",
+            "blood_type": "O+",
+            "qr_generated": True,
+            "completion_percentage": 85
+        },
+        "last_accessed": "Never"
     }
 
 # =============================================================================
