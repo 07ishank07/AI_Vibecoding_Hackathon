@@ -61,13 +61,13 @@ export default function Navigation({
   const navigationItems = getNavigationItems();
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200">
+    <nav className="bg-gradient-to-r from-blue-600 to-green-600 shadow-lg">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <a href="/" className="text-xl font-bold text-gray-900">
-              CrisisLink<span className="text-red-600">.cv</span>
+            <a href="/" className="text-xl font-bold text-white">
+              CrisisLink<span className="text-blue-100">Link</span><span className="text-green-100">.cv</span>
             </a>
           </div>
 
@@ -82,8 +82,8 @@ export default function Navigation({
                   href={item.href}
                   className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-red-100 text-red-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      ? 'bg-white/20 text-white'
+                      : 'text-blue-100 hover:text-white hover:bg-white/10'
                   }`}
                 >
                   <Icon size={16} className="mr-2" />
@@ -94,7 +94,7 @@ export default function Navigation({
             
             {/* User Context Indicator */}
             {userType === 'medical' && (
-              <div className="flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+              <div className="flex items-center px-3 py-1 bg-white/20 text-white rounded-full text-xs font-medium">
                 <Stethoscope size={12} className="mr-1" />
                 Medical Professional
               </div>
@@ -105,7 +105,7 @@ export default function Navigation({
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              className="p-2 rounded-md text-blue-100 hover:text-white hover:bg-white/10"
             >
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -125,8 +125,8 @@ export default function Navigation({
                     href={item.href}
                     className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive
-                        ? 'bg-red-100 text-red-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        ? 'bg-white/20 text-white'
+                        : 'text-blue-100 hover:text-white hover:bg-white/10'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -138,7 +138,7 @@ export default function Navigation({
               
               {/* Mobile User Context Indicator */}
               {userType === 'medical' && (
-                <div className="flex items-center px-3 py-2 bg-blue-50 text-blue-700 rounded-md text-sm">
+                <div className="flex items-center px-3 py-2 bg-white/20 text-white rounded-md text-sm">
                   <Stethoscope size={16} className="mr-3" />
                   Medical Professional Mode
                 </div>
