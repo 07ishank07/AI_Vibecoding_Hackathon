@@ -104,27 +104,75 @@ async def get_patients(search: str = "", limit: int = 50):
 # =============================================================================
 
 @router.get("/profile/{user_id}")
-async def get_patient_dashboard_profile(user_id: str):
+async def get_patient_dashboard_profile(user_id: str, db: Session = Depends(get_db)):
     """
     Get patient's own profile data for their dashboard.
     """
-    return {
-        "user": {
-            "id": user_id,
-            "username": f"user_{user_id[:8]}",
-            "email": "demo@crisislink.cv",
-            "user_type": "patient"
-        },
-        "profile": {
-            "id": f"profile_{user_id[:8]}",
-            "full_name": "Demo User",
-            "date_of_birth": "1990-01-01",
-            "blood_type": "O+",
-            "qr_generated": True,
-            "completion_percentage": 85
-        },
-        "last_accessed": "Never"
-    }
+    try:
+        # Get user from database
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            # Create mock user if not found
+            user_data = {
+                "id": user_id,
+                "username": f"user_{user_id[:8]}",
+                "email": "user@crisislink.cv",
+                "user_type": "patient"
+            }
+        else:
+            user_data = {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "user_type": user.user_type
+            }
+        
+        # Get profile from database
+        profile = db.query(MedicalProfile).filter(MedicalProfile.user_id == user_id).first()
+        if profile:
+            # Calculate completion percentage
+            fields_to_check = [
+                profile.full_name,
+                profile.date_of_birth,
+                profile.blood_type,
+                profile.allergies,
+                profile.medications,
+                profile.medical_conditions,
+                profile.languages,
+                profile.qr_code_url
+            ]
+            filled_fields = sum(1 for f in fields_to_check if f)
+            completion = int((filled_fields / len(fields_to_check)) * 100)
+            
+            profile_data = {
+                "id": profile.id,
+                "full_name": profile.full_name,
+                "date_of_birth": profile.date_of_birth,
+                "blood_type": profile.blood_type,
+                "qr_generated": bool(profile.qr_code_url),
+                "completion_percentage": completion
+            }
+        else:
+            # No profile exists yet
+            profile_data = None
+        
+        return {
+            "user": user_data,
+            "profile": profile_data,
+            "last_accessed": "Never"
+        }
+    except Exception as e:
+        # Fallback to basic user data
+        return {
+            "user": {
+                "id": user_id,
+                "username": f"user_{user_id[:8]}",
+                "email": "user@crisislink.cv",
+                "user_type": "patient"
+            },
+            "profile": None,
+            "last_accessed": "Never"
+        }
 
 # =============================================================================
 # DOCTOR PROFILE ENDPOINT
