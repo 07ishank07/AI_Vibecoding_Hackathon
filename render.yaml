@@ -25,7 +25,7 @@ services:
     startCommand: cd frontend && npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        value: https://crisislink-backend.onrender.com
+        value: https://crisislink-backend-latest.onrender.com
 
 databases:
   - name: crisislink-db
