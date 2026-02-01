@@ -72,9 +72,9 @@ export default function CreateProfile() {
         full_name: formData.fullName,
         date_of_birth: formData.dateOfBirth,
         blood_type: formData.bloodType,
-        allergies: formData.allergies,
-        medications: formData.medications,
-        medical_conditions: formData.medicalConditions,
+        allergies: formData.hasAllergies ? formData.allergies : [],
+        medications: formData.hasMedications ? formData.medications : [],
+        medical_conditions: formData.hasConditions ? formData.medicalConditions : [],
         contacts: formData.contacts,
         public_visible: formData.publicVisible
       };

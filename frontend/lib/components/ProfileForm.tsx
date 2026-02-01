@@ -40,6 +40,9 @@ export interface ProfileFormData {
     medicalConditions: string[];
     contacts: EmergencyContact[];
     publicVisible: PrivacySettings;
+    hasAllergies: boolean;
+    hasMedications: boolean;
+    hasConditions: boolean;
 }
 
 interface ProfileFormProps {
@@ -67,7 +70,10 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
             medications: false,
             conditions: false,
             contacts: false
-        }
+        },
+        hasAllergies: false,
+        hasMedications: false,
+        hasConditions: false
     });
 
     const totalSteps = 4;
@@ -289,27 +295,19 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                     <h3 className="font-medium text-gray-900">🚨 Do you have any allergies?</h3>
                                     <p className="text-xs text-gray-500">Select if you have known allergies</p>
                                 </div>
-                                <div className="relative inline-block w-12 h-6">
-                                    <input 
-                                        type="checkbox" 
-                                        id="hasAllergies" 
-                                        className="opacity-0 w-0 h-0" 
-                                        checked={formData.allergies.length > 0} 
-                                        onChange={(e) => {
-                                            if (!e.target.checked) {
-                                                updateFormData('allergies', []);
-                                            }
-                                        }} 
-                                    />
-                                    <label 
-                                        htmlFor="hasAllergies" 
-                                        className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.allergies.length > 0 ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
-                                    >
-                                        <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.allergies.length > 0 ? 'translate-x-6' : 'translate-x-0'}`} />
-                                    </label>
-                                </div>
+                                <button 
+                                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${formData.hasAllergies ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                    onClick={() => {
+                                        updateFormData('hasAllergies', !formData.hasAllergies);
+                                        if (formData.hasAllergies) {
+                                            updateFormData('allergies', []);
+                                        }
+                                    }}
+                                >
+                                    {formData.hasAllergies ? 'Yes' : 'No'}
+                                </button>
                             </div>
-                            {formData.allergies.length > 0 && (
+                            {formData.hasAllergies && (
                                 <MultiSelect
                                     label="Select your allergies"
                                     value={formData.allergies}
@@ -326,27 +324,19 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                     <h3 className="font-medium text-gray-900">🏥 Do you have any medical conditions?</h3>
                                     <p className="text-xs text-gray-500">Select if you have ongoing medical conditions</p>
                                 </div>
-                                <div className="relative inline-block w-12 h-6">
-                                    <input 
-                                        type="checkbox" 
-                                        id="hasConditions" 
-                                        className="opacity-0 w-0 h-0" 
-                                        checked={formData.medicalConditions.length > 0} 
-                                        onChange={(e) => {
-                                            if (!e.target.checked) {
-                                                updateFormData('medicalConditions', []);
-                                            }
-                                        }} 
-                                    />
-                                    <label 
-                                        htmlFor="hasConditions" 
-                                        className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.medicalConditions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
-                                    >
-                                        <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.medicalConditions.length > 0 ? 'translate-x-6' : 'translate-x-0'}`} />
-                                    </label>
-                                </div>
+                                <button 
+                                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${formData.hasConditions ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                    onClick={() => {
+                                        updateFormData('hasConditions', !formData.hasConditions);
+                                        if (formData.hasConditions) {
+                                            updateFormData('medicalConditions', []);
+                                        }
+                                    }}
+                                >
+                                    {formData.hasConditions ? 'Yes' : 'No'}
+                                </button>
                             </div>
-                            {formData.medicalConditions.length > 0 && (
+                            {formData.hasConditions && (
                                 <MultiSelect
                                     label="Select your medical conditions"
                                     value={formData.medicalConditions}
@@ -363,27 +353,19 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                     <h3 className="font-medium text-gray-900">💊 Are you taking any medications?</h3>
                                     <p className="text-xs text-gray-500">Select if you take regular medications</p>
                                 </div>
-                                <div className="relative inline-block w-12 h-6">
-                                    <input 
-                                        type="checkbox" 
-                                        id="hasMedications" 
-                                        className="opacity-0 w-0 h-0" 
-                                        checked={formData.medications.length > 0} 
-                                        onChange={(e) => {
-                                            if (!e.target.checked) {
-                                                updateFormData('medications', []);
-                                            }
-                                        }} 
-                                    />
-                                    <label 
-                                        htmlFor="hasMedications" 
-                                        className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.medications.length > 0 ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
-                                    >
-                                        <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.medications.length > 0 ? 'translate-x-6' : 'translate-x-0'}`} />
-                                    </label>
-                                </div>
+                                <button 
+                                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${formData.hasMedications ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                    onClick={() => {
+                                        updateFormData('hasMedications', !formData.hasMedications);
+                                        if (formData.hasMedications) {
+                                            updateFormData('medications', []);
+                                        }
+                                    }}
+                                >
+                                    {formData.hasMedications ? 'Yes' : 'No'}
+                                </button>
                             </div>
-                            {formData.medications.length > 0 && (
+                            {formData.hasMedications && (
                                 <MultiSelect
                                     label="Select your medications"
                                     value={formData.medications}
@@ -461,21 +443,12 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                         <h3 className="font-medium text-gray-900 capitalize">{setting === 'bloodType' ? 'Blood Type' : setting}</h3>
                                         <p className="text-xs text-gray-500">Visible to public scan</p>
                                     </div>
-                                    <div className="relative inline-block w-12 h-6">
-                                        <input 
-                                            type="checkbox" 
-                                            id={setting} 
-                                            className="opacity-0 w-0 h-0" 
-                                            checked={formData.publicVisible[setting as keyof PrivacySettings]} 
-                                            onChange={() => togglePrivacy(setting as keyof PrivacySettings)} 
-                                        />
-                                        <label 
-                                            htmlFor={setting} 
-                                            className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.publicVisible[setting as keyof PrivacySettings] ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
-                                        >
-                                            <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.publicVisible[setting as keyof PrivacySettings] ? 'translate-x-6' : 'translate-x-0'}`} />
-                                        </label>
-                                    </div>
+                                    <button 
+                                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${formData.publicVisible[setting as keyof PrivacySettings] ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                                        onClick={() => togglePrivacy(setting as keyof PrivacySettings)}
+                                    >
+                                        {formData.publicVisible[setting as keyof PrivacySettings] ? 'Visible' : 'Hidden'}
+                                    </button>
                                 </div>
                             ))}
                         </div>
