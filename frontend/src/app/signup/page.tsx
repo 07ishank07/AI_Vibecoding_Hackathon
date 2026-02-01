@@ -100,9 +100,10 @@ export default function PatientSignup() {
                     <div className="inline-block border border-blue-500/30 rounded-full px-4 py-2 mb-6">
                         <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent text-sm font-medium">CREATE ACCOUNT</span>
                     </div>
-                    <h1 className="text-3xl font-black text-white mb-3 tracking-tight">
-                        Join CrisisLink
+                    <h1 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">
+                        Crisis<span className="text-blue-500">Link</span><span className="text-green-500">.cv</span>
                     </h1>
+                    <p className="text-2xl text-gray-700 mb-4 font-light">Join CrisisLink</p>
                     <p className="text-slate-400">
                         Create your digital life passport
                     </p>
@@ -127,7 +128,7 @@ export default function PatientSignup() {
                                     type="text"
                                     value={formData.username}
                                     onChange={(e) => handleChange('username', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Choose a username"
                                 />
                             </div>
@@ -144,7 +145,7 @@ export default function PatientSignup() {
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => handleChange('email', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Enter your email"
                                 />
                             </div>
@@ -160,7 +161,7 @@ export default function PatientSignup() {
                                     type="password"
                                     value={formData.password}
                                     onChange={(e) => handleChange('password', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Create a password"
                                 />
                             </div>
@@ -176,7 +177,7 @@ export default function PatientSignup() {
                                     type="password"
                                     value={formData.confirmPassword}
                                     onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Confirm your password"
                                 />
                             </div>
