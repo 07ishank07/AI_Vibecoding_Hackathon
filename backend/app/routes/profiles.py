@@ -29,10 +29,10 @@ async def create_profile(
         raise HTTPException(404, "User not found")
     
     # Create emergency URL
-    emergency_url = f"https://{settings.CV_DOMAIN_BASE}/{user.username}"
+    emergency_url = f"https://crisislink.cv/emergency/{user.username}"
     
     # Generate QR code
-    qr_code = generate_qr_code(emergency_url)
+    qr_code = generate_qr_code(user.username)
     
     # Encrypt sensitive data
     allergies_encrypted = encrypt_data(profile.allergies)
@@ -113,6 +113,16 @@ async def update_profile(
     existing = db.query(MedicalProfile).filter_by(user_id=user_id).first()
     if not existing:
         raise HTTPException(404, "Profile not found")
+    
+    # Get user for QR code generation
+    user = db.query(User).filter_by(id=user_id).first()
+    if not user:
+        raise HTTPException(404, "User not found")
+    
+    # Generate QR code if not exists
+    if not existing.qr_code_url:
+        existing.qr_code_url = generate_qr_code(user.username)
+        existing.emergency_url = f"https://crisislink.cv/emergency/{user.username}"
     
     existing.full_name = profile.full_name
     existing.date_of_birth = profile.date_of_birth
