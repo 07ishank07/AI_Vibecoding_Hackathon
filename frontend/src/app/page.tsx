@@ -1,6 +1,19 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Navigation from '../components/Navigation';
 
 export default function Home() {
+  const [currentWord, setCurrentWord] = useState(0);
+  const words = ['Passport', 'Guardian', 'Lifeline', 'Shield', 'Companion'];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWord((prev) => (prev + 1) % words.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       <Navigation context="public" userType="public" currentPage="/" />
@@ -16,8 +29,10 @@ export default function Home() {
               <h1 className="text-6xl font-black mb-6 tracking-tight">
                 Crisis<span className="text-blue-500">Link</span><span className="text-green-500">.cv</span>
               </h1>
-              <p className="text-2xl text-gray-300 mb-4 font-light">Your Digital Life Passport</p>
-              <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-2xl text-gray-900 mb-4 font-light">
+                Your Digital Life <span className="text-blue-600 font-bold animate-pulse transition-all duration-1000 transform">{words[currentWord]}</span>
+              </p>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Instant medical access through QR technology with AI-powered voice assistance and automated emergency notifications
               </p>
             </div>
@@ -68,18 +83,12 @@ export default function Home() {
             </div>
 
             {/* CTA Buttons */}
-            <div className="text-center space-x-6">
+            <div className="text-center">
               <a 
                 href="/create-profile" 
                 className="inline-block bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105"
               >
                 Create Life Passport
-              </a>
-              <a 
-                href="/emergency/demo" 
-                className="inline-block border border-slate-600 hover:border-slate-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 hover:bg-slate-800"
-              >
-                View Demo Profile
               </a>
             </div>
 
