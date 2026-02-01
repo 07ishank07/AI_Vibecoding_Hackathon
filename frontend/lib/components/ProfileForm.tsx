@@ -309,7 +309,7 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                     }} className="px-8 py-3 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white rounded-xl font-semibold flex items-center transition-all duration-200 transform hover:scale-105">
                         {isEditing ? 'Save Changes' : 'Complete Profile'} <Save size={18} className="ml-2" />
                     </button>
-                )}}}
+                )}
             </div>
         </div>
     );
