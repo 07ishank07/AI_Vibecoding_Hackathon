@@ -135,12 +135,6 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Demo Login */}
-          <div className="mt-6 p-4 bg-slate-700/30 rounded-xl border border-slate-600">
-            <p className="text-slate-300 text-sm mb-2 font-medium">Demo Access:</p>
-            <p className="text-slate-400 text-xs">Email: demo@crisislink.cv | Password: demo123</p>
-          </div>
-
           {/* Signup Links */}
           <div className="mt-8 text-center">
             <p className="text-slate-400 text-sm mb-4">
