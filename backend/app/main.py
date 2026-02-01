@@ -2,35 +2,10 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
-from app.config import settings
 from app.config import settings
 from app.routes import profiles, emergency, auth, dashboard, reference, qr
-from app.database import engine
-from app.models import Base
-
-# =============================================================================
-# DATABASE INITIALIZATION
-# =============================================================================
-
-# Create all database tables
-# Create all database tables
-Base.metadata.create_all(bind=engine)
-
-from app.database import SessionLocal
-from app.routes.reference import populate_reference_data
-
-# Auto-seed database
-try:
-    db = SessionLocal()
-    from app.seeds.medical_data import seed_data
-    seed_data()
-    print("Database seeded successfully")
-except Exception as e:
-    print(f"Error seeding database: {e}")
-finally:
-    if 'db' in locals():
-        db.close()
 
 # =============================================================================
 # APP CONFIGURATION
@@ -50,6 +25,32 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# =============================================================================
+# DATABASE INITIALIZATION (OPTIONAL)
+# =============================================================================
+
+# Only initialize database if DATABASE_URL is available
+if os.getenv("DATABASE_URL"):
+    try:
+        from app.database import engine
+        from app.models import Base
+        
+        # Create all database tables
+        Base.metadata.create_all(bind=engine)
+        
+        from app.database import SessionLocal
+        from app.seeds.medical_data import seed_data
+        
+        # Auto-seed database
+        db = SessionLocal()
+        seed_data()
+        db.close()
+        print("Database initialized successfully")
+    except Exception as e:
+        print(f"Database initialization failed: {e}")
+else:
+    print("No DATABASE_URL found, skipping database initialization")
 
 # =============================================================================
 # ROUTER REGISTRATION
