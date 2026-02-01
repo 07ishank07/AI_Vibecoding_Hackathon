@@ -5,10 +5,6 @@ import { useRouter } from 'next/navigation';
 import { User, Mail, Lock, AlertCircle, ArrowRight, Stethoscope } from 'lucide-react';
 import { registerPatient, setAuthToken, setUserInfo } from '@/lib/api';
 
-// =============================================================================
-// PATIENT SIGNUP PAGE
-// =============================================================================
-
 export default function PatientSignup() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -21,17 +17,11 @@ export default function PatientSignup() {
         confirmPassword: '',
     });
 
-    /**
-     * Handle form field changes
-     */
     const handleChange = (field: string, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
-        setError(null); // Clear error when user types
+        setError(null);
     };
 
-    /**
-     * Validate form before submission
-     */
     const validateForm = (): boolean => {
         if (!formData.username.trim()) {
             setError('Username is required');
@@ -60,9 +50,6 @@ export default function PatientSignup() {
         return true;
     };
 
-    /**
-     * Handle form submission
-     */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -78,11 +65,9 @@ export default function PatientSignup() {
                 password: formData.password,
             });
 
-            // Store auth data
             setAuthToken(response.access_token);
             setUserInfo(response.user_id, response.user_type);
 
-            // Redirect to create profile
             router.push('/create-profile');
         } catch (err: any) {
             const errorMessage = err.response?.data?.detail || 'Registration failed. Please try again.';
@@ -93,150 +78,141 @@ export default function PatientSignup() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 flex items-center justify-center py-12 px-4">
-            <div className="max-w-md w-full space-y-8">
-                {/* Header */}
-                <div className="text-center">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        Create Your Life Passport
+        <div className="min-h-screen bg-slate-900 flex items-center justify-center py-12 px-4">
+            <div className="max-w-md w-full">
+                <div className="text-center mb-8">
+                    <div className="inline-block border border-red-500/30 rounded-full px-4 py-2 mb-6">
+                        <span className="text-red-400 text-sm font-medium">CREATE ACCOUNT</span>
+                    </div>
+                    <h1 className="text-3xl font-black text-white mb-3 tracking-tight">
+                        Join CrisisLink
                     </h1>
-                    <p className="text-gray-600">
-                        Join CrisisLink<span className="text-red-600">.cv</span> to protect your health information
+                    <p className="text-slate-400">
+                        Create your digital life passport
                     </p>
                 </div>
 
-                {/* Form Card */}
-                <div className="bg-white rounded-xl shadow-lg p-8">
+                <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Error Alert */}
                         {error && (
-                            <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
-                                <AlertCircle className="h-5 w-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" />
-                                <span className="text-sm text-red-700">{error}</span>
+                            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start">
+                                <AlertCircle className="h-5 w-5 text-red-400 mr-3 flex-shrink-0 mt-0.5" />
+                                <span className="text-sm text-red-300">{error}</span>
                             </div>
                         )}
 
-                        {/* Username Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-slate-300 mb-3">
                                 Username
                             </label>
                             <div className="relative">
-                                <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                                <User className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
                                 <input
                                     type="text"
                                     value={formData.username}
                                     onChange={(e) => handleChange('username', e.target.value)}
-                                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                                     placeholder="Choose a username"
                                 />
                             </div>
-                            <p className="mt-1 text-xs text-gray-500">This will be your emergency URL: username.crisislink.cv</p>
+                            <p className="mt-2 text-xs text-slate-400">Emergency URL: username.crisislink.cv</p>
                         </div>
 
-                        {/* Email Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-slate-300 mb-3">
                                 Email Address
                             </label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                                <Mail className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
                                 <input
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => handleChange('email', e.target.value)}
-                                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                                     placeholder="Enter your email"
                                 />
                             </div>
                         </div>
 
-                        {/* Password Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-slate-300 mb-3">
                                 Password
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                                <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
                                 <input
                                     type="password"
                                     value={formData.password}
                                     onChange={(e) => handleChange('password', e.target.value)}
-                                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                                     placeholder="Create a password"
                                 />
                             </div>
                         </div>
 
-                        {/* Confirm Password Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-semibold text-slate-300 mb-3">
                                 Confirm Password
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                                <Lock className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
                                 <input
                                     type="password"
                                     value={formData.confirmPassword}
                                     onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                                     placeholder="Confirm your password"
                                 />
                             </div>
                         </div>
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 font-semibold flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="w-full bg-red-600 hover:bg-red-700 text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
                         >
                             {isLoading ? (
-                                <span>Creating Account...</span>
+                                <div className="flex items-center">
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3"></div>
+                                    Creating Account...
+                                </div>
                             ) : (
                                 <>
-                                    Create Account
+                                    Create Life Passport
                                     <ArrowRight className="ml-2 h-5 w-5" />
                                 </>
                             )}
                         </button>
                     </form>
 
-                    {/* Divider */}
-                    <div className="mt-6 relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-200"></div>
+                    <div className="mt-8 text-center">
+                        <div className="flex items-center justify-center mb-6">
+                            <div className="border-t border-slate-600 flex-1"></div>
+                            <span className="px-4 text-slate-400 text-sm">or</span>
+                            <div className="border-t border-slate-600 flex-1"></div>
                         </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-white text-gray-500">or</span>
-                        </div>
-                    </div>
 
-                    {/* Doctor Signup Link */}
-                    <div className="mt-6 text-center">
                         <a
                             href="/signup/doctor"
-                            className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
+                            className="inline-flex items-center text-blue-400 hover:text-blue-300 font-medium mb-4"
                         >
                             <Stethoscope className="h-4 w-4 mr-2" />
-                            I'm a medical professional
+                            Medical Professional Signup
                         </a>
-                    </div>
 
-                    {/* Login Link */}
-                    <div className="mt-4 text-center">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-slate-400">
                             Already have an account?{' '}
-                            <a href="/login" className="text-red-600 hover:text-red-700 font-medium">
+                            <a href="/login" className="text-red-400 hover:text-red-300 font-medium">
                                 Sign in
                             </a>
                         </p>
                     </div>
                 </div>
 
-                {/* Back to Home */}
-                <div className="text-center text-sm text-gray-500">
-                    <a href="/" className="hover:text-gray-700">← Back to Home</a>
+                <div className="text-center mt-8">
+                    <a href="/" className="text-slate-400 hover:text-slate-300 text-sm transition-colors">
+                        ← Return to Homepage
+                    </a>
                 </div>
             </div>
         </div>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { User, QrCode, Eye, Edit, Download, Settings, LogOut, AlertCircle, Loader2 } from 'lucide-react';
 import { getPatientDashboard, getUserInfo, removeAuthToken, getProfile } from '@/lib/api';
 import ProfilePreview from '@/lib/components/ProfilePreview';
+import QRCodeDisplay from '@/components/QRCodeDisplay';
 
 // =============================================================================
 // TYPE DEFINITIONS
@@ -100,10 +101,10 @@ export default function Dashboard() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-12 w-12 text-red-600 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading your dashboard...</p>
+          <Loader2 className="h-12 w-12 text-red-500 animate-spin mx-auto mb-4" />
+          <p className="text-slate-300">Loading your dashboard...</p>
         </div>
       </div>
     );
@@ -112,13 +113,13 @@ export default function Dashboard() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" />
-          <p className="text-gray-600 mb-4">{error}</p>
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <p className="text-slate-300 mb-4">{error}</p>
           <button
             onClick={() => router.push('/login')}
-            className="text-red-600 hover:text-red-700 font-medium"
+            className="text-red-400 hover:text-red-300 font-medium"
           >
             Back to Login
           </button>
@@ -132,24 +133,24 @@ export default function Dashboard() {
   const hasProfile = profile?.id !== null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-900">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-slate-800/50 backdrop-blur border-b border-slate-700">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                CrisisLink<span className="text-red-600">.cv</span> Dashboard
+              <h1 className="text-2xl font-bold text-white">
+                CrisisLink<span className="text-red-500">.cv</span> Dashboard
               </h1>
-              <p className="text-gray-600">Manage your life passport</p>
+              <p className="text-slate-400">Manage your life passport</p>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-slate-300">
                 Welcome, {profile?.full_name || user?.username || 'User'}
               </span>
               <button
                 onClick={handleLogout}
-                className="flex items-center text-gray-600 hover:text-gray-800"
+                className="flex items-center text-slate-400 hover:text-slate-200 transition-colors"
               >
                 <LogOut size={16} className="mr-1" />
                 Sign Out
@@ -283,55 +284,60 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Profile Summary */}
+        {/* Profile Summary with QR Code */}
         {hasProfile && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">Profile Summary</h2>
-              <a
-                href="/create-profile"
-                className="flex items-center text-blue-600 hover:text-blue-700"
-              >
-                <Edit size={16} className="mr-1" />
-                Edit
-              </a>
-            </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-white">Profile Summary</h2>
+                <a
+                  href="/create-profile"
+                  className="flex items-center text-blue-400 hover:text-blue-300"
+                >
+                  <Edit size={16} className="mr-1" />
+                  Edit
+                </a>
+              </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-3">Basic Information</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Name:</span>
-                    <span className="font-medium">{profile?.full_name || 'Not set'}</span>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold text-slate-300 mb-3">Basic Information</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Name:</span>
+                      <span className="font-medium text-white">{profile?.full_name || 'Not set'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Blood Type:</span>
+                      <span className="font-medium text-red-400">
+                        {profile?.blood_type || 'Not set'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Age:</span>
+                      <span className="font-medium text-white">{calculateAge(profile?.date_of_birth || null)}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Blood Type:</span>
-                    <span className="font-medium text-red-600">
-                      {profile?.blood_type || 'Not set'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Age:</span>
-                    <span className="font-medium">{calculateAge(profile?.date_of_birth || null)}</span>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-slate-300 mb-3">Account Info</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Username:</span>
+                      <span className="font-medium text-white">{user?.username}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Email:</span>
+                      <span className="font-medium text-white">{user?.email}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-3">Account Info</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Username:</span>
-                    <span className="font-medium">{user?.username}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Email:</span>
-                    <span className="font-medium">{user?.email}</span>
-                  </div>
-                </div>
-              </div>
             </div>
+            
+            {/* QR Code Display */}
+            <QRCodeDisplay username={user?.username || ''} />
           </div>
         )}
       </div>

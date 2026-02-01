@@ -4,15 +4,17 @@ import qrcode
 from io import BytesIO
 import base64
 
-def generate_qr_code(url: str) -> str:
-    """Generate QR code and return as base64 string"""
+def generate_qr_code(username: str) -> str:
+    """Generate QR code for emergency access and return as base64 string"""
+    emergency_url = f"https://crisislink.cv/emergency/{username}"
+    
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
         box_size=10,
         border=4,
     )
-    qr.add_data(url)
+    qr.add_data(emergency_url)
     qr.make(fit=True)
     
     img = qr.make_image(fill_color="black", back_color="white")

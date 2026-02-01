@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
-from app.models import ReferenceData, Base
+from app.models import ReferenceData, Base, User, MedicalProfile
 from app.database import engine, SessionLocal
+from app.routes.auth import hash_password
+import uuid
 
 # Init DB
 Base.metadata.create_all(bind=engine)
@@ -9,7 +11,8 @@ def seed_data():
     db = SessionLocal()
     
     # Clear existing data to avoid duplicates
-    db.query(ReferenceData).delete()
+    existing_count = db.query(ReferenceData).count()
+    if existing_count == 0:
     
     data = [
         # Allergies - Medications
@@ -59,8 +62,23 @@ def seed_data():
         {"category": "Conditions", "name": "Cancer"},
     ]
 
-    for item in data:
-        db.add(ReferenceData(**item))
+        for item in data:
+            db.add(ReferenceData(**item))
+        print(f"Seeded {len(data)} reference items.")
+    else:
+        print(f"Reference data already exists ({existing_count} items).")
+    demo_user = db.query(User).filter(User.email == "demo@crisislink.cv").first()
+    if not demo_user:
+        demo_user = User(
+            id=str(uuid.uuid4()),
+            username="demo",
+            email="demo@crisislink.cv",
+            hashed_password=hash_password("demo123"),
+            user_type="patient"
+        )
+        db.add(demo_user)
+        db.commit()
+        print("Created demo user: demo@crisislink.cv / demo123")
     
     db.commit()
     print(f"Seeded {len(data)} reference items.")
