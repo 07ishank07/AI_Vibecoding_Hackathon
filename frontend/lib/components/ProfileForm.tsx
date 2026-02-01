@@ -40,6 +40,9 @@ export interface ProfileFormData {
     medicalConditions: string[];
     contacts: EmergencyContact[];
     publicVisible: PrivacySettings;
+    hasAllergies: boolean;
+    hasMedications: boolean;
+    hasConditions: boolean;
 }
 
 interface ProfileFormProps {
@@ -67,7 +70,10 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
             medications: false,
             conditions: false,
             contacts: false
-        }
+        },
+        hasAllergies: false,
+        hasMedications: false,
+        hasConditions: false
     });
 
     const totalSteps = 4;
@@ -294,8 +300,9 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                         type="checkbox" 
                                         id="hasAllergies" 
                                         className="opacity-0 w-0 h-0" 
-                                        checked={formData.allergies.length > 0} 
+                                        checked={formData.hasAllergies} 
                                         onChange={(e) => {
+                                            updateFormData('hasAllergies', e.target.checked);
                                             if (!e.target.checked) {
                                                 updateFormData('allergies', []);
                                             }
@@ -303,13 +310,13 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                     />
                                     <label 
                                         htmlFor="hasAllergies" 
-                                        className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.allergies.length > 0 ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
+                                        className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.hasAllergies ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
                                     >
-                                        <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.allergies.length > 0 ? 'translate-x-6' : 'translate-x-0'}`} />
+                                        <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.hasAllergies ? 'translate-x-6' : 'translate-x-0'}`} />
                                     </label>
                                 </div>
                             </div>
-                            {formData.allergies.length > 0 && (
+                            {formData.hasAllergies && (
                                 <MultiSelect
                                     label="Select your allergies"
                                     value={formData.allergies}
@@ -331,8 +338,9 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                         type="checkbox" 
                                         id="hasConditions" 
                                         className="opacity-0 w-0 h-0" 
-                                        checked={formData.medicalConditions.length > 0} 
+                                        checked={formData.hasConditions} 
                                         onChange={(e) => {
+                                            updateFormData('hasConditions', e.target.checked);
                                             if (!e.target.checked) {
                                                 updateFormData('medicalConditions', []);
                                             }
@@ -340,13 +348,13 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                     />
                                     <label 
                                         htmlFor="hasConditions" 
-                                        className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.medicalConditions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
+                                        className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.hasConditions ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
                                     >
-                                        <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.medicalConditions.length > 0 ? 'translate-x-6' : 'translate-x-0'}`} />
+                                        <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.hasConditions ? 'translate-x-6' : 'translate-x-0'}`} />
                                     </label>
                                 </div>
                             </div>
-                            {formData.medicalConditions.length > 0 && (
+                            {formData.hasConditions && (
                                 <MultiSelect
                                     label="Select your medical conditions"
                                     value={formData.medicalConditions}
@@ -368,8 +376,9 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                         type="checkbox" 
                                         id="hasMedications" 
                                         className="opacity-0 w-0 h-0" 
-                                        checked={formData.medications.length > 0} 
+                                        checked={formData.hasMedications} 
                                         onChange={(e) => {
+                                            updateFormData('hasMedications', e.target.checked);
                                             if (!e.target.checked) {
                                                 updateFormData('medications', []);
                                             }
@@ -377,13 +386,13 @@ export default function ProfileForm({ initialData, onSubmit, isEditing = false }
                                     />
                                     <label 
                                         htmlFor="hasMedications" 
-                                        className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.medications.length > 0 ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
+                                        className={`block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${formData.hasMedications ? 'bg-gradient-to-r from-blue-500 to-green-500' : 'bg-gray-300'}`}
                                     >
-                                        <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.medications.length > 0 ? 'translate-x-6' : 'translate-x-0'}`} />
+                                        <span className={`block h-6 w-6 bg-white rounded-full shadow transform transition-transform duration-200 ${formData.hasMedications ? 'translate-x-6' : 'translate-x-0'}`} />
                                     </label>
                                 </div>
                             </div>
-                            {formData.medications.length > 0 && (
+                            {formData.hasMedications && (
                                 <MultiSelect
                                     label="Select your medications"
                                     value={formData.medications}
