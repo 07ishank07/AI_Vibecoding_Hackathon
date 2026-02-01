@@ -21,7 +21,7 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: cd frontend && npm install && npm run build
+    buildCommand: cd frontend && rm -rf node_modules package-lock.json && npm install && npm run build
     startCommand: cd frontend && npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
