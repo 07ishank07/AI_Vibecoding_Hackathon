@@ -31,18 +31,18 @@ export default function ProfilePage({ params }: { params: { username: string } }
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <Loader2 className="h-12 w-12 text-red-500 animate-spin" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-12 w-12 text-blue-500 animate-spin" />
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <p className="text-slate-300">Profile not found or you need to create one.</p>
-          <a href="/create-profile" className="mt-4 inline-block text-red-400 hover:text-red-300">Create Profile</a>
+          <p className="text-gray-600">Profile not found or you need to create one.</p>
+          <a href="/create-profile" className="mt-4 inline-block text-blue-600 hover:text-blue-700">Create Profile</a>
         </div>
       </div>
     );
@@ -55,8 +55,8 @@ export default function ProfilePage({ params }: { params: { username: string } }
         <div className="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl p-6 mb-6 shadow-sm border border-blue-100">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Profile Preview</h1>
-              <p className="text-slate-400">This is how your profile appears to others</p>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile Preview</h1>
+              <p className="text-gray-600">This is how your profile appears to others</p>
             </div>
             {isOwner && (
               <div className="flex space-x-3">
@@ -69,7 +69,7 @@ export default function ProfilePage({ params }: { params: { username: string } }
                 </a>
                 <a
                   href="/dashboard"
-                  className="flex items-center px-4 py-2 bg-slate-700 text-slate-300 rounded-xl hover:bg-slate-600 transition-colors"
+                  className="flex items-center px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors"
                 >
                   Dashboard
                 </a>
@@ -82,12 +82,12 @@ export default function ProfilePage({ params }: { params: { username: string } }
           {/* Profile Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Privacy Notice */}
-            <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
               <div className="flex items-center">
-                <Eye className="h-5 w-5 text-blue-400 mr-2" />
+                <Eye className="h-5 w-5 text-blue-600 mr-2" />
                 <div>
-                  <h3 className="font-semibold text-blue-300">Public View</h3>
-                  <p className="text-blue-200 text-sm">
+                  <h3 className="font-semibold text-blue-800">Public View</h3>
+                  <p className="text-blue-700 text-sm">
                     Only information marked as "visible to public" is shown below.
                     Medical professionals with emergency access can see all details.
                   </p>
@@ -102,16 +102,16 @@ export default function ProfilePage({ params }: { params: { username: string } }
 
             {/* Privacy Legend */}
             {isOwner && (
-              <div className="bg-slate-800/30 backdrop-blur border border-slate-700 rounded-2xl p-4">
-                <h3 className="font-semibold text-white mb-3">Privacy Legend</h3>
+              <div className="bg-white border border-gray-200 rounded-2xl p-4">
+                <h3 className="font-semibold text-gray-900 mb-3">Privacy Legend</h3>
                 <div className="flex items-center space-x-6 text-sm">
                   <div className="flex items-center">
-                    <Eye className="h-4 w-4 text-green-400 mr-2" />
-                    <span className="text-slate-300">Visible to public</span>
+                    <Eye className="h-4 w-4 text-green-600 mr-2" />
+                    <span className="text-gray-700">Visible to public</span>
                   </div>
                   <div className="flex items-center">
-                    <EyeOff className="h-4 w-4 text-slate-500 mr-2" />
-                    <span className="text-slate-300">Hidden from public (emergency access only)</span>
+                    <EyeOff className="h-4 w-4 text-gray-500 mr-2" />
+                    <span className="text-gray-700">Hidden from public (emergency access only)</span>
                   </div>
                 </div>
               </div>
