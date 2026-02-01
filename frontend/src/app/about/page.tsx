@@ -220,12 +220,6 @@ export default function About() {
               >
                 Create Life Passport
               </a>
-              <a 
-                href="/emergency/demo"
-                className="border-2 border-slate-300 hover:border-slate-400 text-slate-700 font-bold py-4 px-8 rounded-xl transition-all duration-200 hover:bg-slate-50"
-              >
-                View Demo Profile
-              </a>
             </div>
           </div>
         </div>

@@ -15,14 +15,14 @@ interface ProfilePreviewProps {
 
 export default function ProfilePreview({ profile }: ProfilePreviewProps) {
     return (
-        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl shadow-lg p-6">
+        <div className="bg-gradient-to-br from-blue-50 to-green-50 border border-blue-100 rounded-2xl shadow-sm p-6">
             <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
-                    <User className="w-6 h-6 text-red-600" />
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                    <User className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                    <h3 className="text-xl font-bold text-white">{profile.full_name}</h3>
-                    <p className="text-slate-300">Blood Type: {profile.blood_type || 'Not specified'}</p>
+                    <h3 className="text-xl font-bold text-gray-900">{profile.full_name}</h3>
+                    <p className="text-gray-700">Blood Type: {profile.blood_type || 'Not specified'}</p>
                 </div>
             </div>
 
@@ -31,7 +31,7 @@ export default function ProfilePreview({ profile }: ProfilePreviewProps) {
                 <div className="space-y-3">
                     <div className="flex items-center">
                         <AlertTriangle className="w-5 h-5 text-red-500 mr-2" />
-                        <h4 className="font-semibold text-white">Allergies</h4>
+                        <h4 className="font-semibold text-gray-900">Allergies</h4>
                     </div>
                     <div className="space-y-2">
                         {profile.allergies.length > 0 ? (
@@ -41,7 +41,7 @@ export default function ProfilePreview({ profile }: ProfilePreviewProps) {
                                 </div>
                             ))
                         ) : (
-                            <p className="text-slate-400 text-sm">None specified</p>
+                            <p className="text-gray-600 text-sm">None specified</p>
                         )}
                     </div>
                 </div>
@@ -49,18 +49,18 @@ export default function ProfilePreview({ profile }: ProfilePreviewProps) {
                 {/* Medical Conditions */}
                 <div className="space-y-3">
                     <div className="flex items-center">
-                        <Heart className="w-5 h-5 text-red-500 mr-2" />
-                        <h4 className="font-semibold text-white">Conditions</h4>
+                        <Heart className="w-5 h-5 text-blue-500 mr-2" />
+                        <h4 className="font-semibold text-gray-900">Conditions</h4>
                     </div>
                     <div className="space-y-2">
                         {profile.medical_conditions.length > 0 ? (
                             profile.medical_conditions.map((condition, index) => (
-                                <div key={index} className="px-3 py-2 bg-red-50 text-red-800 rounded-lg text-sm font-medium border border-red-200">
+                                <div key={index} className="px-3 py-2 bg-blue-50 text-blue-800 rounded-lg text-sm font-medium border border-blue-200">
                                     {condition}
                                 </div>
                             ))
                         ) : (
-                            <p className="text-slate-400 text-sm">None specified</p>
+                            <p className="text-gray-600 text-sm">None specified</p>
                         )}
                     </div>
                 </div>
@@ -68,18 +68,18 @@ export default function ProfilePreview({ profile }: ProfilePreviewProps) {
                 {/* Medications */}
                 <div className="space-y-3">
                     <div className="flex items-center">
-                        <Pill className="w-5 h-5 text-red-500 mr-2" />
-                        <h4 className="font-semibold text-white">Medications</h4>
+                        <Pill className="w-5 h-5 text-green-500 mr-2" />
+                        <h4 className="font-semibold text-gray-900">Medications</h4>
                     </div>
                     <div className="space-y-2">
                         {profile.medications.length > 0 ? (
                             profile.medications.map((medication, index) => (
-                                <div key={index} className="px-3 py-2 bg-red-50 text-red-800 rounded-lg text-sm font-medium border border-red-200">
+                                <div key={index} className="px-3 py-2 bg-green-50 text-green-800 rounded-lg text-sm font-medium border border-green-200">
                                     {medication}
                                 </div>
                             ))
                         ) : (
-                            <p className="text-slate-400 text-sm">None specified</p>
+                            <p className="text-gray-600 text-sm">None specified</p>
                         )}
                     </div>
                 </div>
