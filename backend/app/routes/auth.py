@@ -64,6 +64,9 @@ async def register_patient(user_data: UserCreate, db: Session = Depends(get_db))
     Returns JWT token on successful registration.
     """
     try:
+        # Test database connection first
+        db.execute("SELECT 1")
+        
         # Check if username exists
         existing_user = db.query(User).filter(User.username == user_data.username).first()
         if existing_user:
@@ -95,16 +98,21 @@ async def register_patient(user_data: UserCreate, db: Session = Depends(get_db))
         # Generate token
         access_token = create_access_token(data={"sub": new_user.id, "type": "patient"})
         
+        print(f"Successfully registered user: {new_user.username} with ID: {new_user.id}")
+        
         return TokenResponse(
             access_token=access_token,
             user_type="patient",
             user_id=new_user.id
         )
     except Exception as e:
+        print(f"Database registration failed: {e}")
         # Fallback to mock if database fails
         import uuid
         mock_user_id = str(uuid.uuid4())
         access_token = f"mock_token_{mock_user_id}"
+        
+        print(f"Using mock registration for user: {user_data.username}")
         
         return TokenResponse(
             access_token=access_token,
