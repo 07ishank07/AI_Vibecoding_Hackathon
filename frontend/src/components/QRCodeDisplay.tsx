@@ -63,15 +63,15 @@ export default function QRCodeDisplay({ username }: QRCodeDisplayProps) {
   }, [username])
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-6">
+    <div className="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl p-6 shadow-sm border border-blue-100">
       <div className="flex items-center gap-3 mb-4">
-        <QrCode className="w-6 h-6 text-red-500" />
+        <QrCode className="w-6 h-6 text-blue-500" />
         <h3 className="text-lg font-bold text-white">Emergency QR Code</h3>
       </div>
       
       {loading ? (
         <div className="flex items-center justify-center py-8">
-          <div className="w-6 h-6 border-2 border-red-500/30 border-t-red-500 rounded-full animate-spin"></div>
+          <div className="w-6 h-6 border-2 border-blue-500/30 border-t-green-500 rounded-full animate-spin"></div>
         </div>
       ) : qrData ? (
         <>
@@ -119,7 +119,7 @@ export default function QRCodeDisplay({ username }: QRCodeDisplayProps) {
           <p>Failed to generate QR code</p>
           <button 
             onClick={generateQR}
-            className="mt-2 text-red-400 hover:text-red-300 text-sm"
+            className="mt-2 text-blue-400 hover:text-green-400 text-sm"
           >
             Try again
           </button>

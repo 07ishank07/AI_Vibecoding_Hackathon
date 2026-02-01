@@ -49,10 +49,10 @@ export default function ProfilePage({ params }: { params: { username: string } }
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 py-6">
+    <div className="min-h-screen bg-white py-6">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
-        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-6 mb-6">
+        <div className="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl p-6 mb-6 shadow-sm border border-blue-100">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">Profile Preview</h1>

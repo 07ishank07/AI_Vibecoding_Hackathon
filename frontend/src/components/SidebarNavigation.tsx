@@ -66,7 +66,7 @@ export default function SidebarNavigation({
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         {!isCollapsed && (
           <a href="/" className="text-lg font-bold text-gray-900">
-            CrisisLink<span className="text-red-600">.cv</span>
+            CrisisLink<span className="text-blue-600">.cv</span>
           </a>
         )}
         <button
@@ -89,7 +89,7 @@ export default function SidebarNavigation({
                 href={item.href}
                 className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-red-100 text-red-700'
+                    ? 'bg-blue-100 text-blue-700'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
                 title={isCollapsed ? item.label : ''}

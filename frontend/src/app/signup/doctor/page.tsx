@@ -126,7 +126,23 @@ export default function DoctorSignup() {
             // Redirect to medical dashboard
             router.push('/medical-dashboard');
         } catch (err: any) {
-            const errorMessage = err.response?.data?.detail || 'Registration failed. Please try again.';
+            console.error('Registration error:', err);
+            let errorMessage = 'Registration failed. Please try again.';
+            
+            if (err.response?.data?.detail) {
+                errorMessage = err.response.data.detail;
+            } else if (err.response?.data?.message) {
+                errorMessage = err.response.data.message;
+            } else if (err.message) {
+                errorMessage = err.message;
+            } else if (err.response?.status === 400) {
+                errorMessage = 'Invalid registration data. Please check your inputs.';
+            } else if (err.response?.status === 409) {
+                errorMessage = 'Username or email already exists.';
+            } else if (err.response?.status >= 500) {
+                errorMessage = 'Server error. Please try again later.';
+            }
+            
             setError(errorMessage);
         } finally {
             setIsLoading(false);

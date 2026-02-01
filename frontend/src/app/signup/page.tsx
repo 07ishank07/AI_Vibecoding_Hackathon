@@ -70,7 +70,23 @@ export default function PatientSignup() {
 
             router.push('/create-profile');
         } catch (err: any) {
-            const errorMessage = err.response?.data?.detail || 'Registration failed. Please try again.';
+            console.error('Registration error:', err);
+            let errorMessage = 'Registration failed. Please try again.';
+            
+            if (err.response?.data?.detail) {
+                errorMessage = err.response.data.detail;
+            } else if (err.response?.data?.message) {
+                errorMessage = err.response.data.message;
+            } else if (err.message) {
+                errorMessage = err.message;
+            } else if (err.response?.status === 400) {
+                errorMessage = 'Invalid registration data. Please check your inputs.';
+            } else if (err.response?.status === 409) {
+                errorMessage = 'Username or email already exists.';
+            } else if (err.response?.status >= 500) {
+                errorMessage = 'Server error. Please try again later.';
+            }
+            
             setError(errorMessage);
         } finally {
             setIsLoading(false);
@@ -78,11 +94,11 @@ export default function PatientSignup() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 flex items-center justify-center py-12 px-4">
+        <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4">
             <div className="max-w-md w-full">
                 <div className="text-center mb-8">
-                    <div className="inline-block border border-red-500/30 rounded-full px-4 py-2 mb-6">
-                        <span className="text-red-400 text-sm font-medium">CREATE ACCOUNT</span>
+                    <div className="inline-block border border-blue-500/30 rounded-full px-4 py-2 mb-6">
+                        <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent text-sm font-medium">CREATE ACCOUNT</span>
                     </div>
                     <h1 className="text-3xl font-black text-white mb-3 tracking-tight">
                         Join CrisisLink
@@ -92,12 +108,12 @@ export default function PatientSignup() {
                     </p>
                 </div>
 
-                <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-8">
+                <div className="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl p-8 shadow-sm border border-blue-100">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {error && (
-                            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start">
-                                <AlertCircle className="h-5 w-5 text-red-400 mr-3 flex-shrink-0 mt-0.5" />
-                                <span className="text-sm text-red-300">{error}</span>
+                            <div className="p-4 bg-gradient-to-r from-blue-100 to-green-100 border border-blue-200 rounded-xl flex items-start">
+                                <AlertCircle className="h-5 w-5 text-blue-600 mr-3 flex-shrink-0 mt-0.5" />
+                                <span className="text-sm text-blue-800">{error}</span>
                             </div>
                         )}
 
@@ -107,11 +123,11 @@ export default function PatientSignup() {
                             </label>
                             <div className="relative">
                                 <User className="absolute left-4 top-4 h-5 w-5 text-slate-400" />
-                                <input
+                            <input
                                     type="text"
                                     value={formData.username}
                                     onChange={(e) => handleChange('username', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Choose a username"
                                 />
                             </div>
@@ -128,7 +144,7 @@ export default function PatientSignup() {
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => handleChange('email', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Enter your email"
                                 />
                             </div>
@@ -144,7 +160,7 @@ export default function PatientSignup() {
                                     type="password"
                                     value={formData.password}
                                     onChange={(e) => handleChange('password', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Create a password"
                                 />
                             </div>
@@ -160,7 +176,7 @@ export default function PatientSignup() {
                                     type="password"
                                     value={formData.confirmPassword}
                                     onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                     placeholder="Confirm your password"
                                 />
                             </div>
@@ -169,7 +185,7 @@ export default function PatientSignup() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-red-600 hover:bg-red-700 text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+                            className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
                         >
                             {isLoading ? (
                                 <div className="flex items-center">
@@ -202,7 +218,7 @@ export default function PatientSignup() {
 
                         <p className="text-sm text-slate-400">
                             Already have an account?{' '}
-                            <a href="/login" className="text-red-400 hover:text-red-300 font-medium">
+                            <a href="/login" className="text-blue-400 hover:text-blue-300 font-medium">
                                 Sign in
                             </a>
                         </p>
